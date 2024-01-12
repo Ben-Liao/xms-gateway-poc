@@ -1,0 +1,11 @@
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Optional eslint cache
+.eslintcache
+
+
+# Dependency directories
+node_modules/
+coverage/

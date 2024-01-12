@@ -1,0 +1,910 @@
+{
+    "id": "71cc1600-aa75-11ee-aef2-435c87362a85",
+    "action-name": "dial",
+    "sub-id": "b571d430-e702-4662-8919-25a01c39d0d6",
+    "interaction-id": "6595c15c-e44a-4836-ac92-833f4b6a35f0",
+    "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+    "integration": {
+        "id": null
+    },
+    "metadata": {},
+    "parameters": {
+        "to": {
+            "provider": "twilio",
+            "region": "default",
+            "sdk-version": "default",
+            "type": "webrtc",
+            "value": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91"
+        },
+        "muted": false,
+        "record": false,
+        "from": "+15064064885",
+        "timeout": "2024-01-03T20:20:48Z",
+        "resource": {
+            "session-reason": null,
+            "deleted": false,
+            "session-id": "6805eff0-aa71-11ee-8203-2362e2069fdf",
+            "email": "bliao@serenova.com",
+            "active-extension": {
+                "provider": "twilio",
+                "region": "default",
+                "sdk-version": "default",
+                "type": "webrtc",
+                "value": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91"
+            },
+            "updated": "2024-01-03T20:19:39Z",
+            "created": "2019-12-18T15:03:15Z",
+            "user-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+            "state": "ready",
+            "last-ready": 1704313179182,
+            "extension": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91",
+            "updated-by": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+            "created-by": "81fb5470-1b26-11e9-8442-70c414dc3a43",
+            "status": "accepted",
+            "extensions": [
+                {
+                    "provider": "twilio",
+                    "region": "default",
+                    "sdk-version": "default",
+                    "type": "webrtc",
+                    "value": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91"
+                },
+                {
+                    "description": "Linephone playben",
+                    "type": "sip",
+                    "value": "sip:playben@sip.linphone.org"
+                }
+            ],
+            "last-action": 1704313179182,
+            "id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+            "capacity-rule-id": "0acf16f0-142a-11ee-8871-3643c25e25c5",
+            "role-id": "84bc4f10-21a7-11ea-8bf3-be4e7b8a0a91",
+            "groups": {
+                "84c26990-21a7-11ea-8bf3-be4e7b8a0a91": true,
+                "2cacdfb0-a7f0-11ed-b4a6-29163ed7ad0f": true
+            },
+            "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+            "session-started": "2024-01-03T20:19:39Z",
+            "direction": "inbound",
+            "session": {
+                "headless": false,
+                "closed": false,
+                "session-id": "6805eff0-aa71-11ee-8203-2362e2069fdf",
+                "expire-at": "2024-01-03T20:22:50Z",
+                "reason-id": null,
+                "resource-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                "capacity-rule-id": null,
+                "reason-list-id": null,
+                "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                "direction": "inbound"
+            }
+        },
+        "early-media": false,
+        "timeout-end": "2024-01-03T20:20:48Z"
+    }
+}
+
+{
+    "id": "0fb62c53-ac12-11ee-90d1-fe57f553e85b",
+    "action-name": "dial",
+    "sub-id": "391a6867-46db-4ac2-9a0b-3cc22c6e7599",
+    "interaction-id": "6598759d-7b64-435e-8568-b77df2cfa8e7",
+    "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+    "integration": {
+        "id": null
+    },
+    "metadata": {},
+    "parameters": {
+        "from": "+15064064885",
+        "early-media": false,
+        "to": {
+            "type": "sip",
+            "value": "sip:playben@sip.linphone.org",
+            "description": "Linephone playben"
+        },
+        "record": false,
+        "muted": false,
+        "timeout": "2024-01-05T21:34:26Z",
+        "resource": {
+            "session-reason": null,
+            "deleted": false,
+            "session-id": "fd1a12f0-ac11-11ee-acc2-c7c1acf32dd7",
+            "email": "bliao@serenova.com",
+            "active-extension": {
+                "type": "sip",
+                "value": "sip:playben@sip.linphone.org",
+                "description": "Linephone playben"
+            },
+            "updated": "2024-01-05T21:33:03Z",
+            "created": "2019-12-18T15:03:15Z",
+            "user-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+            "state": "ready",
+            "last-ready": 1704490383600,
+            "extension": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91",
+            "updated-by": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+            "created-by": "81fb5470-1b26-11e9-8442-70c414dc3a43",
+            "status": "accepted",
+            "extensions": [
+                {
+                    "provider": "twilio",
+                    "region": "default",
+                    "sdk-version": "default",
+                    "type": "webrtc",
+                    "value": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91"
+                },
+                {
+                    "description": "Linephone playben",
+                    "type": "sip",
+                    "value": "sip:playben@sip.linphone.org"
+                }
+            ],
+            "last-action": 1704490383600,
+            "id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+            "capacity-rule-id": "0acf16f0-142a-11ee-8871-3643c25e25c5",
+            "role-id": "84bc4f10-21a7-11ea-8bf3-be4e7b8a0a91",
+            "groups": {
+                "84c26990-21a7-11ea-8bf3-be4e7b8a0a91": true,
+                "2cacdfb0-a7f0-11ed-b4a6-29163ed7ad0f": true
+            },
+            "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+            "session-started": "2024-01-05T21:33:03Z",
+            "direction": "inbound",
+            "session": {
+                "headless": false,
+                "closed": false,
+                "session-id": "fd1a12f0-ac11-11ee-acc2-c7c1acf32dd7",
+                "expire-at": "2024-01-05T21:36:28Z",
+                "reason-id": null,
+                "resource-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                "capacity-rule-id": null,
+                "reason-list-id": null,
+                "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                "direction": "inbound"
+            }
+        },
+        "timeout-end": "2024-01-05T21:34:25Z"
+    }
+}
+
+{
+    "message": "Request failed with status code 401",
+    "name": "AxiosError",
+    "stack": "AxiosError: Request failed with status code 401\n    at settle (/Users/bliao/develop/projects/serenova/xms-gateway-poc/node_modules/axios/dist/node/axios.cjs:1970:12)\n    at IncomingMessage.handleStreamEnd (/Users/bliao/develop/projects/serenova/xms-gateway-poc/node_modules/axios/dist/node/axios.cjs:3069:11)\n    at IncomingMessage.emit (node:events:525:35)\n    at IncomingMessage.emit (node:domain:489:12)\n    at endReadableNT (node:internal/streams/readable:1358:12)\n    at processTicksAndRejections (node:internal/process/task_queues:83:21)",
+    "config": {
+        "transitional": {
+            "silentJSONParsing": true,
+            "forcedJSONParsing": true,
+            "clarifyTimeoutError": false
+        },
+        "adapter": [
+            "xhr",
+            "http"
+        ],
+        "transformRequest": [
+            null
+        ],
+        "transformResponse": [
+            null
+        ],
+        "timeout": 0,
+        "xsrfCookieName": "XSRF-TOKEN",
+        "xsrfHeaderName": "X-XSRF-TOKEN",
+        "maxContentLength": -1,
+        "maxBodyLength": -1,
+        "env": {
+            "Blob": null
+        },
+        "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": "application/xml",
+            "Authorization": "Basic YmxpYW86UGFzc3dvcmQxMjMhQCM=",
+            "User-Agent": "axios/1.6.5",
+            "Content-Length": "395",
+            "Accept-Encoding": "gzip, compress, deflate, br"
+        },
+        "method": "post",
+        "url": "http://10.212.44.102:81/default/eventhandlers?tag=remotecontrol_;appid=c76c67ef-0ca9-4f52-854b-8d5cc2ee3cfb",
+        "data": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<web_service version=\"1.0\">\n  <eventhandler>\n    <eventsubscribe action=\"add\" resource_id=\"any\" resource_type=\"any\" type=\"any\"/>\n    <webhooks action=\"add\" url=\"https://efa2-159-2-180-142.ngrok-free.app/webhook/tenant/c76c67ef-0ca9-4f52-854b-8d5cc2ee3cfb/interaction/2475a9e3-4364-4f1a-8d41-51705f15aca9\"/>\n  </eventhandler>\n</web_service>"
+    },
+    "code": "ERR_BAD_REQUEST",
+    "status": 401
+}
+
+
+
+{
+    "tenantId": "5632772e-b379-4d73-b84d-633e4c64097e",
+    "interactionId": "659d94fe-d402-456c-ae68-6b76b033c877",
+    "id": "b3df58f1-af1f-11ee-97ca-ed846e7c5465",
+    "action-name": "dial",
+    "sub-id": "82637285-9811-426f-8bff-16aa564d659d",
+    "interaction-id": "659d94fe-d402-456c-ae68-6b76b033c877",
+    "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+    "integration": {
+        "id": null
+    },
+    "metadata": {},
+    "parameters": {
+        "from": 15064064885,
+        "to": {
+            "type": "sip",
+            "value": "sip:playben@sip.linphone.org",
+            "description": "Linephone playben"
+        },
+        "early-media": false,
+        "muted": false,
+        "record": false,
+        "resource": {
+            "session-reason": null,
+            "deleted": false,
+            "session-id": "a477b6a0-af1f-11ee-acc2-c7c1acf32dd7",
+            "email": "bliao@serenova.com",
+            "active-extension": {
+                "type": "sip",
+                "value": "sip:playben@sip.linphone.org",
+                "description": "Linephone playben"
+            },
+            "updated": "2024-01-09T18:48:22Z",
+            "created": "2019-12-18T15:03:15Z",
+            "user-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+            "state": "ready",
+            "last-ready": 1704826102310,
+            "extension": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91",
+            "updated-by": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+            "created-by": "81fb5470-1b26-11e9-8442-70c414dc3a43",
+            "status": "accepted",
+            "extensions": [
+                {
+                    "provider": "twilio",
+                    "region": "default",
+                    "sdk-version": "default",
+                    "type": "webrtc",
+                    "value": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91"
+                },
+                {
+                    "description": "Linephone playben",
+                    "type": "sip",
+                    "value": "sip:playben@sip.linphone.org"
+                }
+            ],
+            "last-action": 1704826102310,
+            "id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+            "capacity-rule-id": "0acf16f0-142a-11ee-8871-3643c25e25c5",
+            "role-id": "84bc4f10-21a7-11ea-8bf3-be4e7b8a0a91",
+            "groups": {
+                "84c26990-21a7-11ea-8bf3-be4e7b8a0a91": true,
+                "2cacdfb0-a7f0-11ed-b4a6-29163ed7ad0f": true
+            },
+            "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+            "session-started": "2024-01-09T18:48:22Z",
+            "direction": "inbound",
+            "session": {
+                "headless": false,
+                "closed": false,
+                "session-id": "a477b6a0-af1f-11ee-acc2-c7c1acf32dd7",
+                "expire-at": "2024-01-09T18:51:46Z",
+                "reason-id": null,
+                "resource-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                "capacity-rule-id": null,
+                "reason-list-id": null,
+                "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                "direction": "inbound"
+            }
+        },
+        "timeout": "2024-01-09T18:49:08Z",
+        "timeout-end": "2024-01-09T18:49:08Z"
+    },
+    "xmsData": {
+        "status": 0,
+        "body": {
+            "web_service": {
+                "$": {
+                    "version": "1.0"
+                },
+                "eventhandler_response": [
+                    {
+                        "$": {
+                            "identifier": "7c55185e-6b08-46e9-9817-ab404eafda54",
+                            "appid": "5632772e-b379-4d73-b84d-633e4c64097e",
+                            "status": "active",
+                            "href": "/default/eventhandlers/7c55185e-6b08-46e9-9817-ab404eafda54"
+                        },
+                        "eventsubscribe": [
+                            {
+                                "$": {
+                                    "type": "any",
+                                    "resource_id": "any",
+                                    "resource_type": "any"
+                                }
+                            }
+                        ],
+                        "webhooks": [
+                            {
+                                "$": {
+                                    "url": "https://efa2-159-2-180-142.ngrok-free.app/webhook/tenant/c76c67ef-0ca9-4f52-854b-8d5cc2ee3cfb/interaction/2475a9e3-4364-4f1a-8d41-51705f15aca9"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}
+
+
+
+{
+    "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+    "interaction-id": "65a04b59-673b-4465-b713-f6ae8b00e337",
+    "body": {
+        "id": "92fe7042-b0bd-11ee-bdfa-a6534b04824f",
+        "action-name": "dial",
+        "sub-id": "fa7dadaa-cb70-4012-9232-6960e86f9bb4",
+        "interaction-id": "65a04b59-673b-4465-b713-f6ae8b00e337",
+        "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+        "integration": {
+            "id": null
+        },
+        "metadata": {},
+        "parameters": {
+            "from": "+15064064885",
+            "to": {
+                "type": "sip",
+                "value": "sip:playben@sip.linphone.org",
+                "description": "Linephone playben"
+            },
+            "early-media": false,
+            "record": false,
+            "timeout": "2024-01-11T20:12:15Z",
+            "muted": false,
+            "resource": {
+                "session-reason": null,
+                "deleted": false,
+                "session-id": "601310b0-b0b7-11ee-acc2-c7c1acf32dd7",
+                "email": "bliao@serenova.com",
+                "active-extension": {
+                    "type": "sip",
+                    "value": "sip:playben@sip.linphone.org",
+                    "description": "Linephone playben"
+                },
+                "updated": "2024-01-11T19:42:31Z",
+                "created": "2019-12-18T15:03:15Z",
+                "user-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                "state": "ready",
+                "last-ready": 1705003862830,
+                "extension": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91",
+                "updated-by": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                "created-by": "81fb5470-1b26-11e9-8442-70c414dc3a43",
+                "status": "accepted",
+                "extensions": [
+                    {
+                        "provider": "twilio",
+                        "region": "default",
+                        "sdk-version": "default",
+                        "type": "webrtc",
+                        "value": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91"
+                    },
+                    {
+                        "description": "Linephone playben",
+                        "type": "sip",
+                        "value": "sip:playben@sip.linphone.org"
+                    }
+                ],
+                "last-action": 1705003862830,
+                "id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                "capacity-rule-id": "0acf16f0-142a-11ee-8871-3643c25e25c5",
+                "role-id": "84bc4f10-21a7-11ea-8bf3-be4e7b8a0a91",
+                "groups": {
+                    "84c26990-21a7-11ea-8bf3-be4e7b8a0a91": true,
+                    "2cacdfb0-a7f0-11ed-b4a6-29163ed7ad0f": true
+                },
+                "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                "session-started": "2024-01-11T19:42:31Z",
+                "direction": "inbound",
+                "session": {
+                    "headless": false,
+                    "closed": false,
+                    "session-id": "601310b0-b0b7-11ee-acc2-c7c1acf32dd7",
+                    "expire-at": "2024-01-11T20:14:13Z",
+                    "reason-id": null,
+                    "resource-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                    "capacity-rule-id": null,
+                    "reason-list-id": null,
+                    "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                    "direction": "inbound"
+                }
+            },
+            "timeout-end": "2024-01-11T20:12:14Z"
+        }
+    }
+}
+//add-participant:
+//info: /modifyCall: called to handle add-participant
+{
+    "actionName": "add-participant",
+    "actionId": "eb0c9c00-b156-11ee-a4f3-3f437cea3837",
+    "params": {
+        "id": "eb0c9c00-b156-11ee-a4f3-3f437cea3837",
+        "action-name": "add-participant",
+        "sub-id": "fd17af46-1290-4c19-abf0-897e316ca9f8",
+        "interaction-id": "65a14c89-0a51-4479-845a-d048f0bb5551",
+        "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+        "integration": {
+            "id": null
+        },
+        "metadata": {
+            "xms-event": {
+                "body": {
+                    "web-service": {
+                        "$": {
+                            "version": "1.0"
+                        },
+                        "eventhandler-response": [
+                            {
+                                "$": {
+                                    "identifier": "6c4b2c08-fc4f-4dc9-8ac8-513b1dc1b5fc",
+                                    "appid": "5632772e-b379-4d73-b84d-633e4c64097e",
+                                    "href": "/default/eventhandlers/6c4b2c08-fc4f-4dc9-8ac8-513b1dc1b5fc",
+                                    "status": "active"
+                                },
+                                "webhooks": [
+                                    {
+                                        "$": {
+                                            "url": "https://efa2-159-2-180-142.ngrok-free.app/webhook/tenant/c76c67ef-0ca9-4f52-854b-8d5cc2ee3cfb/interaction/2475a9e3-4364-4f1a-8d41-51705f15aca9"
+                                        }
+                                    }
+                                ],
+                                "eventsubscribe": [
+                                    {
+                                        "$": {
+                                            "resource-type": "any",
+                                            "type": "any",
+                                            "resource-id": "any"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "status": 0
+            },
+            "params": {
+                "action-name": "dial",
+                "metadata": {},
+                "sub-id": "651f88aa-ee9d-4913-8bfc-3fbca66ee0d1",
+                "interaction-id": "65a14c89-0a51-4479-845a-d048f0bb5551",
+                "integration": {
+                    "id": null
+                },
+                "id": "ddd93ed1-b156-11ee-a4f3-3f437cea3837",
+                "parameters": {
+                    "timeout-end": "2024-01-12T14:29:33Z",
+                    "resource": {
+                        "session-reason": null,
+                        "deleted": null,
+                        "session-id": "b9ae5d60-b156-11ee-8203-2362e2069fdf",
+                        "email": "bliao@serenova.com",
+                        "active-extension": {
+                            "description": "Linephone playben",
+                            "type": "sip",
+                            "value": "sip:playben@sip.linphone.org"
+                        },
+                        "updated": "2024-01-12T14:28:15Z",
+                        "created": "2019-12-18T15:03:15Z",
+                        "user-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                        "state": "ready",
+                        "last-ready": 1705069695526,
+                        "extension": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91",
+                        "updated-by": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                        "created-by": "81fb5470-1b26-11e9-8442-70c414dc3a43",
+                        "status": "accepted",
+                        "extensions": [
+                            {
+                                "provider": "twilio",
+                                "sdk-version": "default",
+                                "region": "default",
+                                "type": "webrtc",
+                                "value": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91"
+                            },
+                            {
+                                "description": "Linephone playben",
+                                "type": "sip",
+                                "value": "sip:playben@sip.linphone.org"
+                            }
+                        ],
+                        "last-action": 1705069701766,
+                        "id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                        "capacity-rule-id": "0acf16f0-142a-11ee-8871-3643c25e25c5",
+                        "role-id": "84bc4f10-21a7-11ea-8bf3-be4e7b8a0a91",
+                        "groups": {
+                            "84c26990-21a7-11ea-8bf3-be4e7b8a0a91": true,
+                            "2cacdfb0-a7f0-11ed-b4a6-29163ed7ad0f": true
+                        },
+                        "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                        "session-started": "2024-01-12T14:28:15Z",
+                        "direction": "inbound",
+                        "session": {
+                            "headless": null,
+                            "closed": null,
+                            "session-id": "b9ae5d60-b156-11ee-8203-2362e2069fdf",
+                            "expire-at": "2024-01-12T14:31:28Z",
+                            "reason-id": null,
+                            "resource-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                            "capacity-rule-id": null,
+                            "reason-list-id": null,
+                            "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                            "direction": "inbound"
+                        }
+                    },
+                    "record": null,
+                    "early-media": null,
+                    "from": "+15064064885",
+                    "to": {
+                        "description": "Linephone playben",
+                        "type": "sip",
+                        "value": "sip:playben@sip.linphone.org"
+                    },
+                    "muted": null,
+                    "timeout": "2024-01-12T14:29:33Z"
+                },
+                "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e"
+            },
+            "participants": {
+                "source": {
+                    "description": "Linephone playben",
+                    "type": "sip",
+                    "value": "sip:playben@sip.linphone.org"
+                }
+            }
+        },
+        "parameters": {
+            "conference-region": "",
+            "muted": false,
+            "start-conference-on-enter": true,
+            "record": false,
+            "whisper-to": "",
+            "beep": [],
+            "resource": {
+                "session-reason": null,
+                "deleted": false,
+                "session-id": "b9ae5d60-b156-11ee-8203-2362e2069fdf",
+                "email": "bliao@serenova.com",
+                "active-extension": {
+                    "type": "sip",
+                    "value": "sip:playben@sip.linphone.org",
+                    "description": "Linephone playben"
+                },
+                "updated": "2024-01-12T14:28:15Z",
+                "created": "2019-12-18T15:03:15Z",
+                "user-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                "state": "ready",
+                "last-ready": 1705069695526,
+                "extension": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91",
+                "updated-by": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                "created-by": "81fb5470-1b26-11e9-8442-70c414dc3a43",
+                "status": "accepted",
+                "extensions": [
+                    {
+                        "provider": "twilio",
+                        "region": "default",
+                        "sdk-version": "default",
+                        "type": "webrtc",
+                        "value": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91"
+                    },
+                    {
+                        "description": "Linephone playben",
+                        "type": "sip",
+                        "value": "sip:playben@sip.linphone.org"
+                    }
+                ],
+                "last-action": 1705069701766,
+                "id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                "capacity-rule-id": "0acf16f0-142a-11ee-8871-3643c25e25c5",
+                "role-id": "84bc4f10-21a7-11ea-8bf3-be4e7b8a0a91",
+                "groups": {
+                    "84c26990-21a7-11ea-8bf3-be4e7b8a0a91": true,
+                    "2cacdfb0-a7f0-11ed-b4a6-29163ed7ad0f": true
+                },
+                "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                "session-started": "2024-01-12T14:28:15Z",
+                "direction": "inbound",
+                "session": {
+                    "headless": false,
+                    "closed": false,
+                    "session-id": "b9ae5d60-b156-11ee-8203-2362e2069fdf",
+                    "expire-at": "2024-01-12T14:31:28Z",
+                    "reason-id": null,
+                    "resource-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                    "capacity-rule-id": null,
+                    "reason-list-id": null,
+                    "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                    "direction": "inbound"
+                }
+            },
+            "media": null
+        }
+    }
+}
+//[2024-01-12T14:28:56.611Z] info: /modifyCall: called to handle add-participant 
+{
+    "actionName": "add-participant",
+    "actionId": "eb0c9c00-b156-11ee-a4f3-3f437cea3837",
+    "params": {
+        "id": "eb0c9c00-b156-11ee-a4f3-3f437cea3837",
+        "action-name": "add-participant",
+        "sub-id": "fd17af46-1290-4c19-abf0-897e316ca9f8",
+        "interaction-id": "65a14c89-0a51-4479-845a-d048f0bb5551",
+        "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+        "integration": {
+            "id": null
+        },
+        "metadata": {
+            "xms-event": {
+                "body": {
+                    "web-service": {
+                        "$": {
+                            "version": "1.0"
+                        },
+                        "eventhandler-response": [
+                            {
+                                "$": {
+                                    "identifier": "6c4b2c08-fc4f-4dc9-8ac8-513b1dc1b5fc",
+                                    "appid": "5632772e-b379-4d73-b84d-633e4c64097e",
+                                    "href": "/default/eventhandlers/6c4b2c08-fc4f-4dc9-8ac8-513b1dc1b5fc",
+                                    "status": "active"
+                                },
+                                "webhooks": [
+                                    {
+                                        "$": {
+                                            "url": "https://efa2-159-2-180-142.ngrok-free.app/webhook/tenant/c76c67ef-0ca9-4f52-854b-8d5cc2ee3cfb/interaction/2475a9e3-4364-4f1a-8d41-51705f15aca9"
+                                        }
+                                    }
+                                ],
+                                "eventsubscribe": [
+                                    {
+                                        "$": {
+                                            "resource-type": "any",
+                                            "type": "any",
+                                            "resource-id": "any"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "status": 0
+            },
+            "params": {
+                "action-name": "dial",
+                "metadata": {},
+                "sub-id": "651f88aa-ee9d-4913-8bfc-3fbca66ee0d1",
+                "interaction-id": "65a14c89-0a51-4479-845a-d048f0bb5551",
+                "integration": {
+                    "id": null
+                },
+                "id": "ddd93ed1-b156-11ee-a4f3-3f437cea3837",
+                "parameters": {
+                    "timeout-end": "2024-01-12T14:29:33Z",
+                    "resource": {
+                        "session-reason": null,
+                        "deleted": null,
+                        "session-id": "b9ae5d60-b156-11ee-8203-2362e2069fdf",
+                        "email": "bliao@serenova.com",
+                        "active-extension": {
+                            "description": "Linephone playben",
+                            "type": "sip",
+                            "value": "sip:playben@sip.linphone.org"
+                        },
+                        "updated": "2024-01-12T14:28:15Z",
+                        "created": "2019-12-18T15:03:15Z",
+                        "user-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                        "state": "ready",
+                        "last-ready": 1705069695526,
+                        "extension": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91",
+                        "updated-by": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                        "created-by": "81fb5470-1b26-11e9-8442-70c414dc3a43",
+                        "status": "accepted",
+                        "extensions": [
+                            {
+                                "provider": "twilio",
+                                "sdk-version": "default",
+                                "region": "default",
+                                "type": "webrtc",
+                                "value": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91"
+                            },
+                            {
+                                "description": "Linephone playben",
+                                "type": "sip",
+                                "value": "sip:playben@sip.linphone.org"
+                            }
+                        ],
+                        "last-action": 1705069701766,
+                        "id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                        "capacity-rule-id": "0acf16f0-142a-11ee-8871-3643c25e25c5",
+                        "role-id": "84bc4f10-21a7-11ea-8bf3-be4e7b8a0a91",
+                        "groups": {
+                            "84c26990-21a7-11ea-8bf3-be4e7b8a0a91": true,
+                            "2cacdfb0-a7f0-11ed-b4a6-29163ed7ad0f": true
+                        },
+                        "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                        "session-started": "2024-01-12T14:28:15Z",
+                        "direction": "inbound",
+                        "session": {
+                            "headless": null,
+                            "closed": null,
+                            "session-id": "b9ae5d60-b156-11ee-8203-2362e2069fdf",
+                            "expire-at": "2024-01-12T14:31:28Z",
+                            "reason-id": null,
+                            "resource-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                            "capacity-rule-id": null,
+                            "reason-list-id": null,
+                            "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                            "direction": "inbound"
+                        }
+                    },
+                    "record": null,
+                    "early-media": null,
+                    "from": "+15064064885",
+                    "to": {
+                        "description": "Linephone playben",
+                        "type": "sip",
+                        "value": "sip:playben@sip.linphone.org"
+                    },
+                    "muted": null,
+                    "timeout": "2024-01-12T14:29:33Z"
+                },
+                "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e"
+            },
+            "participants": {
+                "source": {
+                    "description": "Linephone playben",
+                    "type": "sip",
+                    "value": "sip:playben@sip.linphone.org"
+                }
+            }
+        },
+        "parameters": {
+            "conference-region": "",
+            "muted": false,
+            "start-conference-on-enter": true,
+            "record": false,
+            "whisper-to": "",
+            "beep": [],
+            "resource": {
+                "session-reason": null,
+                "deleted": false,
+                "session-id": "b9ae5d60-b156-11ee-8203-2362e2069fdf",
+                "email": "bliao@serenova.com",
+                "active-extension": {
+                    "type": "sip",
+                    "value": "sip:playben@sip.linphone.org",
+                    "description": "Linephone playben"
+                },
+                "updated": "2024-01-12T14:28:15Z",
+                "created": "2019-12-18T15:03:15Z",
+                "user-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                "state": "ready",
+                "last-ready": 1705069695526,
+                "extension": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91",
+                "updated-by": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                "created-by": "81fb5470-1b26-11e9-8442-70c414dc3a43",
+                "status": "accepted",
+                "extensions": [
+                    {
+                        "provider": "twilio",
+                        "region": "default",
+                        "sdk-version": "default",
+                        "type": "webrtc",
+                        "value": "4e4d1ff0_21a1_11ea_8bf3_be4e7b8a0a91"
+                    },
+                    {
+                        "description": "Linephone playben",
+                        "type": "sip",
+                        "value": "sip:playben@sip.linphone.org"
+                    }
+                ],
+                "last-action": 1705069701766,
+                "id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                "capacity-rule-id": "0acf16f0-142a-11ee-8871-3643c25e25c5",
+                "role-id": "84bc4f10-21a7-11ea-8bf3-be4e7b8a0a91",
+                "groups": {
+                    "84c26990-21a7-11ea-8bf3-be4e7b8a0a91": true,
+                    "2cacdfb0-a7f0-11ed-b4a6-29163ed7ad0f": true
+                },
+                "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                "session-started": "2024-01-12T14:28:15Z",
+                "direction": "inbound",
+                "session": {
+                    "headless": false,
+                    "closed": false,
+                    "session-id": "b9ae5d60-b156-11ee-8203-2362e2069fdf",
+                    "expire-at": "2024-01-12T14:31:28Z",
+                    "reason-id": null,
+                    "resource-id": "4e4d1ff0-21a1-11ea-8bf3-be4e7b8a0a91",
+                    "capacity-rule-id": null,
+                    "reason-list-id": null,
+                    "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+                    "direction": "inbound"
+                }
+            },
+            "media": null
+        }
+    }
+}
+
+
+
+[2024-01-12T16: 45: 03.712Z] info: metadata is not empty 
+{
+    "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+    "interaction-id": "65a16c5a-720f-4df2-b80e-e547105b1c87",
+    "action-id": "ef2c89e0-b169-11ee-a47d-1b9ca497272b",
+    "params": {
+        "id": "ef2c89e0-b169-11ee-a47d-1b9ca497272b",
+        "action-name": "dial",
+        "sub-id": "ea29d3af-4bcf-456a-86ec-d66ce8674e82",
+        "interaction-id": "65a16c5a-720f-4df2-b80e-e547105b1c87",
+        "tenant-id": "5632772e-b379-4d73-b84d-633e4c64097e",
+        "integration": {
+            "id": null
+        },
+        "metadata": {
+            "xms-event": {
+                "body": {
+                    "web-service": {
+                        "$": {
+                            "version": "1.0"
+                        },
+                        "eventhandler-response": [
+                            {
+                                "$": {
+                                    "identifier": "0000097c-68aa-4d5e-b660-ca91e5a095d4",
+                                    "appid": "5632772e-b379-4d73-b84d-633e4c64097e",
+                                    "href": "/default/eventhandlers/0000097c-68aa-4d5e-b660-ca91e5a095d4",
+                                    "status": "active"
+                                },
+                                "webhooks": [
+                                    {
+                                        "$": {
+                                            "url": "https://efa2-159-2-180-142.ngrok-free.app/webhook/tenant/c76c67ef-0ca9-4f52-854b-8d5cc2ee3cfb/interaction/2475a9e3-4364-4f1a-8d41-51705f15aca9"
+                                        }
+                                    }
+                                ],
+                                "eventsubscribe": [
+                                    {
+                                        "$": {
+                                            "resource-type": "any",
+                                            "type": "any",
+                                            "resource-id": "any"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "status": 0
+            },
+            "participants": {
+                "source": {
+                    "description": "Linephone playben",
+                    "type": "sip",
+                    "value": "sip:playben@sip.linphone.org"
+                }
+            }
+        },
+        "parameters": {
+            "from": "+15064064885",
+            "early-media": true,
+            "record": false,
+            "muted": false,
+            "to": "+15064715969",
+            "customer": "+15064715969",
+            "timeout": "2024-01-12T16:46:03Z",
+            "timeout-end": "2024-01-12T16:46:03Z"
+        }
+    }
+}

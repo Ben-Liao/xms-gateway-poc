@@ -1,0 +1,25 @@
+---
+eureka:
+  host: us-east-1-qe-eureka.cxengagelabs.net
+  port: 8080
+
+instance:
+  app: xms
+  hostName: 127.0.0.1
+  ipAddr: 127.0.0.1
+  sid: d46ce465-2ab0-479f-b8e6-7ea37b5647a7
+  port:
+    $: 9080
+    ? "@enabled"
+    : "true"
+  vipAddress: xms-gateway.cxengage.net
+  dataCenterInfo:
+    "@class" : com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo
+    name: MyOwn
+  appGroupName: UNKNOWN
+  homePageUrl: http://127.0.0.1:9080
+  statusPageUrl: http://127.0.0.1:9080/status
+  healthCheckUrl: http://127.0.0.1:9080/healthcheck
+  isCoordinatingDiscoveryServer: false
+  registerWithEureka: true
+  fetchRegistry: false

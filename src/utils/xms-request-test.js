@@ -22,33 +22,33 @@ const data = `<?xml version="1.0" encoding="UTF-8" ?>
 </web_service>`;
 
 axios.post(xmsurl, data, {
-    headers: {
-      'Content-Type': 'application/xml',
-      Authorization: `Basic ${token}`,
-    },
-  })
-    .then((response) => new Promise((resolve, reject) => {
-      xml2js.parseString(response.data, (err, result) => {
-        if (err) {
+  headers: {
+    'Content-Type': 'application/xml',
+    Authorization: `Basic ${token}`,
+  },
+})
+  .then((response) => new Promise((resolve, reject) => {
+    xml2js.parseString(response.data, (err, result) => {
+      if (err) {
         console.log('errors:', err);
-          reject(err);
-        } else {
-            console.log('Result:', JSON.stringify(result)); // 打印出 result
-          resolve({
-            status: 200,
-            body: result,
-          });
-        }
-      });
-    }))
-    .catch((err) => {
-    // Handle error
-      console.log('getRequest Errors:', err);
-      return {
-        status: -1,
-        body: {
-          message: 'failed, http get request',
-          error: err.response.data,
-        },
-      };
+        reject(err);
+      } else {
+        console.log('Result:', JSON.stringify(result)); // 打印出 result
+        resolve({
+          status: 200,
+          body: result,
+        });
+      }
     });
+  }))
+  .catch((err) => {
+    // Handle error
+    console.log('getRequest Errors:', err);
+    return {
+      status: -1,
+      body: {
+        message: 'failed, http get request',
+        error: err.response.data,
+      },
+    };
+  });

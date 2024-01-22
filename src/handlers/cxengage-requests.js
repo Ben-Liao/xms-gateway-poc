@@ -4,9 +4,9 @@ const {
   v1: uuidv1,
 } = require('uuid');
 
-const logger = require('./logger');
-const secrets = require('./aws-secrets-manager');
-const errors = require('./errors');
+const logger = require('../utils/logger');
+const secrets = require('../utils/aws-secrets-manager');
+const errors = require('../utils/errors');
 
 const {
   CXENGAGE_REGION,
@@ -280,7 +280,13 @@ async function updateInteractionMetadata({ tenantId, interactionId, metadata }) 
     return data;
   } catch (error) {
     logger.info('Failed to update interaction metadata', error);
-    throw error;
+    return {
+      status: errors.HTTP_POST_REQ_TO_CX_FAILED,
+      body: {
+        message: 'failed, http post request',
+        error: error.response.data,
+      },
+    };
   }
 }
 

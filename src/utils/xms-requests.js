@@ -42,22 +42,22 @@ function createWebHookRequest(tenantId, interactionId, webhookUrl) {
   logger.debug('Create a webhook request, body:', xml);
   logger.debug('Create a webhook request, xmsurl:', xmsurl);
 
-  const data = `<?xml version="1.0" encoding="UTF-8" ?>
-<web_service
-    version="1.0">
-    <eventhandler>
-        <eventsubscribe
-            action="add"
-            resource_id="any"
-            resource_type="any"
-            type="any"/>
-        <webhooks
-            action="add"
-            url="https://efa2-159-2-180-142.ngrok-free.app/webhook/tenant/c76c67ef-0ca9-4f52-854b-8d5cc2ee3cfb/interaction/2475a9e3-4364-4f1a-8d41-51705f15aca9"/>
-    </eventhandler>
-</web_service>`;
+//   const data = `<?xml version="1.0" encoding="UTF-8" ?>
+// <web_service
+//     version="1.0">
+//     <eventhandler>
+//         <eventsubscribe
+//             action="add"
+//             resource_id="any"
+//             resource_type="any"
+//             type="any"/>
+//         <webhooks
+//             action="add"
+//             url="https://efa2-159-2-180-142.ngrok-free.app/webhook/tenant/c76c67ef-0ca9-4f52-854b-8d5cc2ee3cfb/interaction/2475a9e3-4364-4f1a-8d41-51705f15aca9"/>
+//     </eventhandler>
+// </web_service>`;
 
-  return axios.post(xmsurl, data, {
+  return axios.post(xmsurl, xml, {
     headers: {
       'Content-Type': 'application/xml',
       Authorization: `Basic ${token}`,
@@ -77,18 +77,191 @@ function createWebHookRequest(tenantId, interactionId, webhookUrl) {
       });
     }))
     .catch((err) => {
-    // Handle error
+      // Handle error
       logger.error('getRequest Errors:', err);
       return {
         status: errors.FAILED_SEND_REQUEST_TO_XMS,
         body: {
-          message: 'failed, http get request',
-          error: err.response.data,
+          message: 'Failed to call xms to create webhook.',
+          error: err,
         },
       };
     });
 }
 
+function createCallRequest(tenantId, interactionId, source, destination) {
+  const xmsurl = `${xmsUrl}/default/calls?appid=${tenantId}`;
+
+  const logContext = {
+    tenantId,
+    interactionId,
+    source,
+    destination,
+  };
+
+  const obj = {
+    web_service: {
+      $: {
+        version: '1.0',
+      },
+      call: {
+        $: {
+          async_dtmf: 'yes',
+          async_tone: 'yes',
+          audio: 'sendrecv',
+          cpa: 'no',
+          destination_uri: destination,
+          dtmf_mode: 'rfc2833',
+          ice: 'no',
+          info_ack_mode: 'automatic',
+          media: 'audio',
+          signaling: 'no',
+          source_uri: source,
+          rx_delta: '+0dB',
+          tx_delta: '+0dB',
+          video: 'sendrecv',
+        },
+      },
+    },
+  };
+
+  const builder = new xml2js.Builder();
+  const xml = builder.buildObject(obj);
+
+  logger.debug('Calling xms call services', { ...logContext, xmsurl, xml });
+
+  const response = axios.post(xmsurl, xml, {
+    headers: {
+      'Content-Type': 'application/xml',
+      Authorization: `Basic ${token}`,
+    },
+  })
+    .then((res) => new Promise((resolve, reject) => {
+      xml2js.parseString(res.data, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          logger.debug('createCallRequest, xms /call response:', JSON.stringify(JSON.parse(result)));
+          resolve({
+            status: errors.STATUS_NO_ERROR,
+            body: JSON.parse(result),
+          });
+        }
+      });
+    }))
+    .catch((err) => {
+      // Handle error
+      logger.error('getRequest Errors:', err);
+      return {
+        status: errors.FAILED_SEND_REQUEST_TO_XMS,
+        body: {
+          message: 'Failed to call the XMS /call request.',
+          error: err,
+        },
+      };
+    });
+
+  logger.debug('createCallRequest: response:', response);
+  return response;
+}
+
+// Create a coference request to xms server to create a conference. The conference will
+// be created with the following xml format:
+// <web_service
+// version="1.0">
+// <conference
+//     active_talker_interval="0ms"
+//     active_talker_region="1"
+//     auto_gain_control="yes"
+//     beep="yes"
+//     caption="yes"
+//     caption_duration="infinite"
+//     clamp_dtmf="no"
+//     echo_cancellation="yes"
+//     layout="0"
+//     layout_size="vga"
+//     max_parties="2"
+//     mixing_mode="mcu"
+//     reserve="2"
+//     type="audio"/>
+// </web_service>
+function createConferenceRequest(tenantId, interactionId, conferenceParams) {
+  const xmsurl = `${xmsUrl}/default/conferences?appid=${tenantId}`;
+
+  const logContext = {
+    tenantId,
+    interactionId,
+    conferenceParams,
+  };
+
+  const obj = {
+    web_service: {
+      $: {
+        version: '1.0',
+      },
+      conference: {
+        $: {
+          active_talker_interval: conferenceParams.active_talker_interval || '0ms',
+          active_talker_region: conferenceParams.active_talker_region || '1',
+          auto_gain_control: conferenceParams.auto_gain_control || 'yes',
+          beep: conferenceParams.beep || 'yes',
+          caption: conferenceParams.caption || 'yes',
+          caption_duration: conferenceParams.caption_duration || 'infinite',
+          clamp_dtmf: conferenceParams.clamp_dtmf || 'no',
+          echo_cancellation: conferenceParams.echo_cancellation || 'yes',
+          layout: conferenceParams.layout || '0',
+          layout_size: conferenceParams.layout_size || 'vga',
+          max_parties: conferenceParams.max_parties || '4',
+          mixing_mode: conferenceParams.mixing_mode || 'mcu',
+          reserve: conferenceParams.reserve || '2',
+          type: conferenceParams.type || 'audio',
+        },
+      },
+    },
+  };
+
+  const builder = new xml2js.Builder();
+  const xml = builder.buildObject(obj);
+
+  logger.debug('Calling xms conference services', { ...logContext, xmsurl, xml });
+
+  const response = axios.post(xmsurl, xml, {
+    headers: {
+      'Content-Type': 'application/xml',
+      Authorization: `Basic ${token}`,
+    },
+  })
+    .then((res) => new Promise((resolve, reject) => {
+      xml2js.parseString(res.data, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          logger.debug('createConferenceRequest, xms /conference response:', JSON.stringify(JSON.parse(result)));
+          resolve({
+            status: errors.STATUS_NO_ERROR,
+            body: JSON.parse(result),
+          });
+        }
+      });
+    }))
+    .catch((err) => {
+      // Handle error
+      logger.error('getRequest Errors:', err);
+      return {
+        status: errors.FAILED_SEND_REQUEST_TO_XMS,
+        body: {
+          message: 'Failed to call the XMS /conference request.',
+          error: err,
+        },
+      };
+    });
+
+  logger.debug('createConferenceRequest: response:', response);
+  return response;
+}
+
 module.exports = {
   createWebHookRequest,
+  createConferenceRequest,
+  createCallRequest,
 };

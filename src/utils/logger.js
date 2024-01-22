@@ -42,6 +42,7 @@ const customFormat = format.printf((data) => {
 const logger = createLogger({
   level: (process.env.RUN_ENV === 'local' ? 'debug' : 'info'),
   format: combine(
+    format.colorize(),
     format.timestamp(),
     customFormat,
   ),

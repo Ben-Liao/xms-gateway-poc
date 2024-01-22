@@ -3,8 +3,6 @@ const express = require('express');
 const xml2js = require('xml2js');
 const logger = require('../utils/logger');
 const common = require('../utils/common');
-const AWS = require('aws-sdk');
-const { log } = require('winston');
 
 function parseXml(xml) {
   return xml2js.parseStringPromise(xml, { explicitArray: false })
@@ -31,15 +29,18 @@ router.post('/webhook/tenant/:tenantId/interaction/:interactionId', (req, res) =
   const { body, params } = req;
   const { tenantId, interactionId } = params;
 
-  const inputParams = {
+ 
+  const logContext = {
     tenantId,
     interactionId,
-    body,
+    params: body,
   };
 
-  logger.info('/webhook: called', inputParams);
+  logger.info('/webhook: called', logContext);
+  console.log('/webhook is called', req);
 
-  if (!body || Object.keys(body).length === 0) {
+  if (Object.keys(body).length === 0) {
+    logger.info('webhook body is empty', logContext);
     common.sendHTTPSuccess(res, {
       status: 200,
       message: 'webhook checked',
@@ -47,9 +48,17 @@ router.post('/webhook/tenant/:tenantId/interaction/:interactionId', (req, res) =
     return;
   }
 
-  const xmsData = parseXml(body);
-  logger.info('xms webhook recevied:', xmsData);
+  // Split the body into lines
+  const lines = body.split('\r\n');
 
+  // Remove the first line (the size of the XML object)
+  const xmlLines = lines.slice(1);
+
+  // Join the remaining lines back into a single string
+  const xmlString = xmlLines.join('\r\n');
+
+  const xmsData = parseXml(xmlString);
+  logger.info('xms /webhook recevied:', xmsData);
   common.sendHTTPSuccess(res, {
     status: 200,
     message: 'verify-webhook Done',

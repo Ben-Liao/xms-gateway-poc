@@ -1,22 +1,21 @@
 const xml2js = require('xml2js');
 
 function parseXml(xml) {
-    return xml2js.parseStringPromise(xml, { explicitArray: false })
-      .then((result) => {
-        if (result.web_service && result.web_service.event && result.web_service.event.event_data) {
-          const eventDataArray = result.web_service.event.event_data;
-          const eventDataObject = {};
-          eventDataArray.forEach((item) => {
-            eventDataObject[item.$.name] = item.$.value;
-          });
-          const newResult = JSON.parse(JSON.stringify(result));
-          newResult.web_service.event.event_data = eventDataObject;
-          return newResult;
-        }
-        return result;
-      });
-  }
-
+  return xml2js.parseStringPromise(xml, { explicitArray: false })
+    .then((result) => {
+      if (result.web_service && result.web_service.event && result.web_service.event.event_data) {
+        const eventDataArray = result.web_service.event.event_data;
+        const eventDataObject = {};
+        eventDataArray.forEach((item) => {
+          eventDataObject[item.$.name] = item.$.value;
+        });
+        const newResult = JSON.parse(JSON.stringify(result));
+        newResult.web_service.event.event_data = eventDataObject;
+        return newResult;
+      }
+      return result;
+    });
+}
 
 // Example XML string (replace this with your actual XML data)
 // const xmlData = `<web_service version="1.0">
@@ -25,7 +24,7 @@ function parseXml(xml) {
 //     resource_id="a964609b-aac3-4927-b2e5-5a02ca391131"
 //     resource_type="call">
 //     <event_data
-//         name="call_id" 
+//         name="call_id"
 //         value="a964609b-aac3-4927-b2e5-5a02ca391131"/>
 //     <event_data
 //         name="called_uri"
@@ -40,7 +39,7 @@ function parseXml(xml) {
 //         name="gusid"
 //         value="3f525caab547422589418380acca9776"/>
 //     <event_data
-//         name="headers" 
+//         name="headers"
 //         value="Request-URI:_SIP_1_@10.51.45.13;transport=TCP&#xD;&#xA;Call-ID:REMOTECONTROL_1-121923-194438-602-10.164.90.54&#xD;&#xA;CSeq: 1 INVITE&#xD;&#xA;To: &lt;sip:_SIP_1_@10.51.45.13&gt;&#xD;&#xA;From: 1 &lt;sip:iptB1T1@10.164.9"/>
 //     <event_data
 //         name="headers.Allow"
@@ -82,7 +81,7 @@ function parseXml(xml) {
 //         name="prack_level"
 //         value="supported"/>
 //     <event_data
-//         name="type" 
+//         name="type"
 //         value="OFFER"/>
 //     <event_data
 //         name="uri"
@@ -111,7 +110,7 @@ const xmlData = `<web_service version="1.0">
 </web_service>`;
 
 parseXml(xmlData)
-    .then(parsedData => console.log(JSON.stringify(parsedData, null, 2)))
-    .catch(err => console.error(err));
+  .then((parsedData) => console.log(JSON.stringify(parsedData, null, 2)))
+  .catch((err) => console.error(err));
 
 module.exports = parseXml;

@@ -2,7 +2,7 @@ const express = require('express');
 
 const logger = require('../utils/logger');
 const common = require('../utils/common');
-const cxRequests = require('../utils/cxengage-requests');
+const cxRequests = require('../handlers/cxengage-requests');
 const errors = require('../utils/errors');
 const sfRequests = require('../utils/sf-rest-requests');
 

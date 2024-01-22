@@ -2,7 +2,7 @@ const express = require('express');
 
 const errors = require('../utils/errors');
 const common = require('../utils/common');
-const cxRequests = require('../utils/cxengage-requests');
+const cxRequests = require('../handlers/cxengage-requests');
 const logger = require('../utils/logger');
 
 const router = express.Router();

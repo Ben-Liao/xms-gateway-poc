@@ -15,7 +15,7 @@ const logger = require('./utils/logger');
 const secrets = require('./utils/aws-secrets-manager');
 const appState = require('./state');
 const eurekaClient = require('./eureka-client');
-const cxRequests = require('./utils/cxengage-requests');
+const cxRequests = require('./handlers/cxengage-requests');
 const errors = require('./utils/errors');
 
 const publicApp = require('./public-app');
@@ -130,7 +130,7 @@ async function registerGateway() {
   const payload = {
     type: 'xms',
     // url: `https://${CXENGAGE_REGION}-${CXENGAGE_ENVIRONMENT}-xms-gateway.${CXENGAGE_DOMAIN}`,
-    url: 'https://313e-159-2-180-142.ngrok-free.app',
+    url: 'https://e23e-159-2-180-142.ngrok-free.app',
     actions: [
       {
         name: 'verify-credentials',

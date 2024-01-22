@@ -2,7 +2,7 @@ const { validate: uuidValidate } = require('uuid');
 const logger = require('../utils/logger');
 
 const common = require('../utils/common');
-const cxRequests = require('../utils/cxengage-requests');
+const cxRequests = require('./cxengage-requests');
 const errors = require('../utils/errors');
 const xmsRequests = require('../utils/xms-requests');
 
@@ -13,7 +13,7 @@ const {
 } = process.env;
 
 // const serverURL = `https://${CXENGAGE_REGION}-${CXENGAGE_ENVIRONMENT}-xms-gateway.${CXENGAGE_DOMAIN}`;
-const serverURL = 'https://313e-159-2-180-142.ngrok-free.app';
+const serverURL = 'https://e23e-159-2-180-142.ngrok-free.app';
 
 async function dial(req, res) {
   const { body, params } = req;
@@ -42,7 +42,7 @@ async function dial(req, res) {
     'tenant-id': tenantId,
     'interaction-id': interactionId,
     'action-id': actionId,
-    params: req.body,
+    params: body,
   };
 
   logger.info('action-id:', actionId);
@@ -51,7 +51,6 @@ async function dial(req, res) {
   let meta = {};
 
   if (!metadata || Object.keys(metadata).length === 0) {
-    // Add your code here
     logger.info('metadata is empty', logContext);
 
     try {
@@ -61,10 +60,37 @@ async function dial(req, res) {
       const xmsEvent = await xmsRequests.createWebHookRequest(tenantId, interactionId, callBackUri);
       logger.info('XMS event is created', { ...logContext, xmsEvent });
 
+      // Create a conferences:
+      const xmsConferenceParams = {
+        type: 'audio',
+        max_parties: 4,
+      };
+
+      const conferenceResponse = await xmsRequests.createConferenceRequest({
+        tenantId, interactionId, xmsConferenceParams,
+      });
+
+      const conference = conferenceResponse.body;
+      logger.info('XMS conference is created', { ...logContext, conference });
+
+      // Create a call
+      const xmsCallParams = {
+        tenantId,
+        interactionId,
+        source: 'sip:xmserver@107.20.26.214',
+        destination: parameters.to,
+      };
+
+      const xmsCallResponse = await xmsRequests.createCallRequest(xmsCallParams);
+      logger.info('XMS call is created', { ...logContext, xmsCallResponse });
+      const callId = xmsCallResponse.body.call_response.identifier;
+
       // build the metadata
       meta = {
-        'xms-event': xmsEvent,
-        participants: { source: parameters.to },
+        'xms-event': xmsEvent.body,
+        'xms-conference': conference,
+        'xms-call-resource': [xmsCallResponse.body.call_response],
+        participants: [{ [callId]: { source: parameters.to } }],
       };
 
       // update the interaction metadata
@@ -77,25 +103,73 @@ async function dial(req, res) {
       logger.info('metaUpdateRespone', { ...logContext, metaUpdateRespone });
     } catch (error) {
       // Handle any errors that occur during the request handling
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({
+        error,
+        message: 'Internal server error',
+      });
     }
   } else {
     // Add your code here
     logger.info('metadata is not empty', logContext);
+
     const {
       'xms-event': xmsEvent,
       participants,
     } = metadata;
 
+    // const { identifier, appId, href } = xmsEvent['web-service']['eventhandler-response'][0].$;
+    const { value } = participants.source;
+    const fromSource = value;
 
-    
+    const toPhone = parameters.to;
+    const destination = `sip:${toPhone}@34.223.203.193`;
+
+    const toDestination = { value: destination, type: 'sip' };
+
+    metadata.participants.destination = toDestination;
+
     try {
       // Handle the HTTP POST "dial" request here
-      // Generate a successful response
+      logger.info('Prepare for xms call ', { ...logContext, fromSource, destination });
+      // let xmsResponse;
+      // xmsRequests.createCallRequest(
+      //   tenantId,
+      //   interactionId,
+      //   fromSource,
+      //   destination,
+      // ).then((response) => {
+      //   xmsResponse = response.body;
+      //   logger.info('xms /call request responsed', xmsResponse);
+      // }).catch((error) => {
+      //   logger.error('Error in xms  call request', error);
+      // });
 
+      const xmsCallParams = {
+        tenantId,
+        interactionId,
+        source: 'sip:xmserver@107.20.26.214',
+        destination,
+      };
+      const xmsCallResponse = await xmsRequests.createCallRequest(xmsCallParams);
+      logger.info('XMS call is created', { ...logContext, xmsCallResponse });
+      const callId = xmsCallResponse.body.call_response.identifier;
+
+      metadata.participants.push({ [callId]: { source: destination } });
+
+      // update the interaction metadata
+      const metaUpdateRespone = await cxRequests.updateInteractionMetadata({
+        tenantId,
+        interactionId,
+        metadata,
+      });
+
+      logger.info('metaUpdateRespone', { ...logContext, metaUpdateRespone });
     } catch (error) {
       // Handle any errors that occur during the request handling
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({
+        error,
+        message: 'Internal server error: faild to create xms call.',
+      });
     }
   }
 

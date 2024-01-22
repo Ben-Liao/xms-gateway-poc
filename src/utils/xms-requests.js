@@ -260,8 +260,99 @@ function createConferenceRequest(tenantId, interactionId, conferenceParams) {
   return response;
 }
 
+// Update the conference to the xms server.
+// The conference will be updated with the following xml format:
+// <web_service
+// version="1.0">
+// <call>
+//     <call_action>
+//         <add_party
+//             audio="sendrecv"
+//             auto_gain_control="yes"
+//             clamp_dtmf="no"
+//             conf_id="ae4435c4-6e1a-4bbf-a6e0-133d3cb4b2d8"
+//             echo_cancellation="yes"
+//             region="0"
+//             video="inactive"/>
+//         </call_action>
+//     </call>
+// </web_service>
+function updateConferenceRequest(tenantId, interactionId, conferenceId, updateParams) {
+  const xmsurl = `${xmsUrl}/default/conferences?appid=${tenantId}`;
+
+  const logContext = {
+    tenantId,
+    interactionId,
+    conferenceId,
+    updateParams,
+  };
+
+  const obj = {
+    web_service: {
+      $: {
+        version: '1.0',
+      },
+      call: {
+        call_action: {
+          add_party: {
+            $: {
+              audio: updateParams.audio || 'sendrecv',
+              auto_gain_control: updateParams.auto_gain_control || 'yes',
+              clamp_dtmf: updateParams.clamp_dtmf || 'no',
+              conf_id: conferenceId,
+              echo_cancellation: updateParams.echo_cancellation || 'yes',
+              region: updateParams.region || '0',
+              video: updateParams.video || 'inactive',
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const builder = new xml2js.Builder();
+  const xml = builder.buildObject(obj);
+
+  logger.debug('Calling xms conference services', { ...logContext, xmsurl, xml });
+
+  const response = axios.put(xmsurl, xml, {
+    headers: {
+      'Content-Type': 'application/xml',
+      Authorization: `Basic ${token}`,
+    },
+  })
+    .then((res) => new Promise((resolve, reject) => {
+      xml2js.parseString(res.data, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          logger.debug('updateConferenceRequest, xms /conference response:', JSON.stringify(JSON.parse(result)));
+          resolve({
+            status: errors.STATUS_NO_ERROR,
+            body: JSON.parse(result),
+          });
+        }
+      });
+    }))
+    .catch((err) => {
+      // Handle error
+      logger.error('getRequest Errors:', err);
+      return {
+        status: errors.FAILED_SEND_REQUEST_TO_XMS,
+        body: {
+          message: 'Failed to call the XMS /conference request.',
+          error: err,
+        },
+      };
+    });
+
+  logger.debug('updateConferenceRequest: response:', response);
+  return response;
+}
+
 module.exports = {
   createWebHookRequest,
   createConferenceRequest,
   createCallRequest,
+  updateConferenceRequest,
 };

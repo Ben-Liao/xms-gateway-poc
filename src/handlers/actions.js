@@ -4,7 +4,7 @@ const logger = require('../utils/logger');
 const common = require('../utils/common');
 const cxRequests = require('./cxengage-requests');
 const errors = require('../utils/errors');
-const xmsRequests = require('../utils/xms-requests');
+const xmsRequests = require('./xms-requests');
 
 const {
   CXENGAGE_REGION,
@@ -13,7 +13,7 @@ const {
 } = process.env;
 
 // const serverURL = `https://${CXENGAGE_REGION}-${CXENGAGE_ENVIRONMENT}-xms-gateway.${CXENGAGE_DOMAIN}`;
-const serverURL = 'https://e23e-159-2-180-142.ngrok-free.app';
+const serverURL = 'https://fdd8-159-2-180-142.ngrok-free.app';
 
 async function dial(req, res) {
   const { body, params } = req;
@@ -54,7 +54,7 @@ async function dial(req, res) {
     logger.info('metadata is empty', logContext);
 
     try {
-      const callBackUri = `${serverURL}/webhook/tenant/${tenantId}/interaction/${interactionId}`;
+      const callBackUri = `${serverURL}/webhook/tenant/${tenantId}/webhook`;
       logger.info('callBackUri', callBackUri);
       // call the xmsserver to create a call back webhook.
       const xmsEvent = await xmsRequests.createWebHookRequest(tenantId, interactionId, callBackUri);

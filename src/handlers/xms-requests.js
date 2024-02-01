@@ -1,15 +1,16 @@
 const axios = require('axios');
 const xml2js = require('xml2js');
-const logger = require('./logger');
-const errors = require('./errors');
+const logger = require('../utils/logger');
+const errors = require('../utils/errors');
 
-const xmsUrl = 'http://10.212.44.102:81';
+// const xmsUrl = 'http://10.212.44.102:81';
+const xmsUrl = 'http://107.20.26.214:81';
 const username = 'bliao';
 const password = 'Password123!@#';
 const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
 
 function createWebHookRequest(tenantId, interactionId, webhookUrl) {
-  const xmsurl = `${xmsUrl}/default/eventhandlers?tag=remotecontrol_;appid=${tenantId}`;
+  const xmsurl = `${xmsUrl}/default/eventhandlers?tag=remotecontrol_;appid=app`;
 
   const obj = {
     web_service: {
@@ -89,8 +90,31 @@ function createWebHookRequest(tenantId, interactionId, webhookUrl) {
     });
 }
 
+// Get all eventhandlers from xms server
+async function getEventHandlersRequest() {
+  const xmsurl = `${xmsUrl}/default/eventhandlers?appid=app`;
+
+  logger.info('getEventHandlersRequest, xmsurl:', xmsurl);
+
+  try {
+    const response = await axios.get(xmsurl, {
+      headers: {
+        Authorization: `Basic ${token}`,
+      },
+    });
+    const xmlData = response.data;
+    const parser = new xml2js.Parser();
+    const jsonData = await parser.parseStringPromise(xmlData);
+    logger.debug('getEventHandlersRequest, jsonData:', jsonData);
+    return jsonData;
+  } catch (error) {
+    logger.error('Failed to get event handlers:', error);
+    throw errors.createError('Failed to get event handlers', error);
+  }
+}
+
 function createCallRequest(tenantId, interactionId, source, destination) {
-  const xmsurl = `${xmsUrl}/default/calls?appid=${tenantId}`;
+  const xmsurl = `${xmsUrl}/default/calls?appid=app`;
 
   const logContext = {
     tenantId,
@@ -186,7 +210,7 @@ function createCallRequest(tenantId, interactionId, source, destination) {
 //     type="audio"/>
 // </web_service>
 function createConferenceRequest(tenantId, interactionId, conferenceParams) {
-  const xmsurl = `${xmsUrl}/default/conferences?appid=${tenantId}`;
+  const xmsurl = `${xmsUrl}/default/conferences?appid=app`;
 
   const logContext = {
     tenantId,
@@ -278,7 +302,7 @@ function createConferenceRequest(tenantId, interactionId, conferenceParams) {
 //     </call>
 // </web_service>
 function updateConferenceRequest(tenantId, interactionId, conferenceId, updateParams) {
-  const xmsurl = `${xmsUrl}/default/conferences?appid=${tenantId}`;
+  const xmsurl = `${xmsUrl}/default/conferences?appid=app`;
 
   const logContext = {
     tenantId,
@@ -351,6 +375,7 @@ function updateConferenceRequest(tenantId, interactionId, conferenceId, updatePa
 }
 
 module.exports = {
+  getEventHandlersRequest,
   createWebHookRequest,
   createConferenceRequest,
   createCallRequest,

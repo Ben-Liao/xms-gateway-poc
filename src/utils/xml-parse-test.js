@@ -1,4 +1,5 @@
 const xml2js = require('xml2js');
+const xmsRequests = require('../handlers/xms-requests');
 
 function parseXml(xml) {
   return xml2js.parseStringPromise(xml, { explicitArray: false })
@@ -112,5 +113,9 @@ const xmlData = `<web_service version="1.0">
 parseXml(xmlData)
   .then((parsedData) => console.log(JSON.stringify(parsedData, null, 2)))
   .catch((err) => console.error(err));
+
+const responData = xmsRequests.getEventHandlersRequest();
+console.log('Get the eventhandlers: ', responData);
+
 
 module.exports = parseXml;

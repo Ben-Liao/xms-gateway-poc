@@ -130,7 +130,7 @@ async function registerGateway() {
   const payload = {
     type: 'xms',
     // url: `https://${CXENGAGE_REGION}-${CXENGAGE_ENVIRONMENT}-xms-gateway.${CXENGAGE_DOMAIN}`,
-    url: 'https://e23e-159-2-180-142.ngrok-free.app',
+    url: 'https://fdd8-159-2-180-142.ngrok-free.app',
     actions: [
       {
         name: 'verify-credentials',

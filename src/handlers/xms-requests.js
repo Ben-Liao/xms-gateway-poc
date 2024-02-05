@@ -5,9 +5,55 @@ const errors = require('../utils/errors');
 
 // const xmsUrl = 'http://10.212.44.102:81';
 const xmsUrl = 'http://107.20.26.214:81';
-const username = 'bliao';
-const password = 'Password123!@#';
+const username = 'APITest';
+const password = 'ApiTest123!@#';
 const token = Buffer.from(`${username}:${password}`, 'utf8').toString('base64');
+
+async function updateXMSRequest(path, payload) {
+  let updatedPath = path;
+  if (!updatedPath.startsWith('/')) {
+    updatedPath = `/${updatedPath}`;
+  }
+
+  const url = `${xmsUrl}${updatedPath}?appid=app`;
+  logger.debug('Calling xms call services', { url, payload });
+
+  const headers = {
+    'Content-Type': 'application/xml',
+    Authorization: `Basic ${token}`,
+  };
+
+  try {
+    const response = await axios.put(url, payload, { headers });
+    logger.debug('updateCallRequest, xms /call response:', { response: response.data });
+    // Parse the XML response using xml2js
+    const parser = new xml2js.Parser();
+    // const parsedData = await parser.parseStringPromise(response.data);
+    const parsedData = await new Promise((resolve, reject) => {
+      parser.parseString(response.data, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          logger.debug('Passing out the xml data from payload: result:', JSON.stringify(result)); // 打印出 result
+          resolve(result);
+        }
+      });
+    });
+    return {
+      status: errors.STATUS_NO_ERROR,
+      body: parsedData,
+    };
+  } catch (error) {
+    logger.error('Failed to update xms call:', error);
+    throw new Error({
+      status: errors.FAILED_SEND_REQUEST_TO_XMS,
+      body: {
+        message: 'Failed to update the XMS /call request.',
+        error,
+      },
+    });
+  }
+}
 
 function createWebHookRequest(tenantId, interactionId, webhookUrl) {
   const xmsurl = `${xmsUrl}/default/eventhandlers?tag=remotecontrol_;appid=app`;
@@ -43,20 +89,20 @@ function createWebHookRequest(tenantId, interactionId, webhookUrl) {
   logger.debug('Create a webhook request, body:', xml);
   logger.debug('Create a webhook request, xmsurl:', xmsurl);
 
-//   const data = `<?xml version="1.0" encoding="UTF-8" ?>
-// <web_service
-//     version="1.0">
-//     <eventhandler>
-//         <eventsubscribe
-//             action="add"
-//             resource_id="any"
-//             resource_type="any"
-//             type="any"/>
-//         <webhooks
-//             action="add"
-//             url="https://efa2-159-2-180-142.ngrok-free.app/webhook/tenant/c76c67ef-0ca9-4f52-854b-8d5cc2ee3cfb/interaction/2475a9e3-4364-4f1a-8d41-51705f15aca9"/>
-//     </eventhandler>
-// </web_service>`;
+  //   const data = `<?xml version="1.0" encoding="UTF-8" ?>
+  // <web_service
+  //     version="1.0">
+  //     <eventhandler>
+  //         <eventsubscribe
+  //             action="add"
+  //             resource_id="any"
+  //             resource_type="any"
+  //             type="any"/>
+  //         <webhooks
+  //             action="add"
+  //             url="https://efa2-159-2-180-142.ngrok-free.app/webhook/tenant/c76c67ef-0ca9-4f52-854b-8d5cc2ee3cfb/interaction/2475a9e3-4364-4f1a-8d41-51705f15aca9"/>
+  //     </eventhandler>
+  // </web_service>`;
 
   return axios.post(xmsurl, xml, {
     headers: {
@@ -187,6 +233,124 @@ function createCallRequest(tenantId, interactionId, source, destination) {
 
   logger.debug('createCallRequest: response:', response);
   return response;
+}
+
+// Update the call to the xms server.
+// The call will be updated with the provided XML payload.
+async function updateCallRequest(tenantId, interactionId, callId, call) {
+  const path = `/default/calls/${callId}`;
+
+  const logContext = {
+    tenantId,
+    interactionId,
+    callId,
+    call,
+  };
+
+  const obj = {
+    web_service: {
+      $: {
+        version: '1.0',
+      },
+      call: {
+        $: {
+          answer: call.answer || 'yes',
+          async_completion: call.async_completion || 'yes',
+          async_dtmf: call.async_dtmf || 'yes',
+          async_tone: call.async_tone || 'yes',
+          cpa: call.cpa || 'no',
+          dtmf_mode: call.dtmf_mode || 'rfc2833',
+          info_ack_mode: call.info_ack_mode || 'automatic',
+          media: call.media || 'audio',
+          signaling: call.signaling || 'yes',
+          rx_delta: '+0dB',
+          tx_delta: '+0dB',
+        },
+      },
+    },
+  };
+
+  const builder = new xml2js.Builder();
+  const xml = builder.buildObject(obj);
+
+  logger.debug('Calling xms call services', { ...logContext, path, xml });
+
+  try {
+    const response = await updateXMSRequest(path, xml);
+    logger.debug('updateCallRequest, xms /call response:', { ...logContext, response });
+    return response.body;
+  } catch (error) {
+    logger.error(`Failed to update xms call: ${error}`);
+    return {
+      status: errors.FAILED_SEND_REQUEST_TO_XMS,
+      body: {
+        message: 'Failed to update the XMS /call request.',
+        error,
+      },
+    };
+  }
+}
+
+async function playMediaRequest(tenantId, interactionId, callId, callData) {
+  const path = `/default/calls/${callId}/media?appid=app`;
+
+  const logContext = {
+    tenantId,
+    interactionId,
+    callId,
+    callData,
+  };
+
+  const obj = {
+    web_service: {
+      $: { version: '1.0' },
+      call: {
+        call_action: {
+          play: {
+            $: {
+              delay: '0s',
+              max_time: 'infinite',
+              offset: '0s',
+              repeat: '0',
+              skip_interval: '10s',
+              terminate_digits: '#',
+            },
+            play_source: {
+              $: { location: 'file://xmstool/xmstool_play' },
+            },
+            dvr_setting: {
+              $: {
+                backward_key: '2',
+                forward_key: '1',
+                pause_key: '3',
+                restart_key: '5',
+                resume_key: '4',
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+  const builder = new xml2js.Builder();
+  const xml = builder.buildObject(obj);
+
+  logger.debug('Calling xms call services to play media', { ...logContext, path, xml });
+
+  try {
+    const response = await updateXMSRequest(path, xml);
+    logger.debug('updateCallRequest, xms /call response:', { ...logContext, response });
+    return response.body;
+  } catch (error) {
+    logger.error(`Failed to update xms call: ${error}`);
+    return {
+      status: errors.FAILED_SEND_REQUEST_TO_XMS,
+      body: {
+        message: 'Failed to update the XMS /call request.',
+        error,
+      },
+    };
+  }
 }
 
 // Create a coference request to xms server to create a conference. The conference will
@@ -380,4 +544,6 @@ module.exports = {
   createConferenceRequest,
   createCallRequest,
   updateConferenceRequest,
+  updateCallRequest,
+  playMediaRequest,
 };

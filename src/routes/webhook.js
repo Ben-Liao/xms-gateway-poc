@@ -3,6 +3,7 @@ const express = require('express');
 const xml2js = require('xml2js');
 const logger = require('../utils/logger');
 const common = require('../utils/common');
+const xmsRequests = require('../handlers/xms-requests');
 
 const router = express.Router();
 
@@ -44,14 +45,17 @@ router.post('/webhook/tenant/:tenantId/webhook', async (req, res) => {
           ? parsedXml.web_service.event
           : [parsedXml.web_service.event];
 
+        // events.forEach((event) => {
+        //   if (event.event_data) {
+        //     const eventData = event.event_data;
+        //     logger.info('Event Data:', { ...logContext, eventData });
+        //     handleEvent(eventData);
+        //   } else {
+        //     logger.info('Event data not found in the event.', { ...logContext });
+        //   }
+        // });
         events.forEach((event) => {
-          if (event.event_data) {
-            const eventData = event.event_data;
-            logger.info('Event Data:', { ...logContext, eventData });
-            handleEvent(eventData);
-          } else {
-            logger.info('Event data not found in the event.', { ...logContext });
-          }
+          handleEvent(tenantId, event);
         });
       } else {
         logger.info('Web service or event data not found.', { ...logContext });
@@ -99,21 +103,55 @@ function processChunkedData(rawData) {
   return xmlData;
 }
 
-function handleEvent(eventData) {
-  switch (eventData.type) {
-    case 'click':
-      // Handle click event
+async function handleEvent(tenantId, event) {
+  // Extract common event properties
+  const eventType = event['$'].type;
+  const resourceId = event['$'].resource_id;
+  const resourceType = event['$'].resource_type;
+
+  const logContext = {
+    tenantId, eventType, resourceId, resourceType,
+  };
+  logger.info('Handling event', { ...logContext, event });
+
+  // Extract event data into a more accessible format
+  let eventData = {};
+  if (event.event_data) {
+    eventData = event.event_data.reduce((acc, data) => {
+      acc[data['$'].name] = data['$'].value;
+      return acc;
+    }, {});
+  }
+
+  let responseData = {};
+  const call = {};
+  switch (eventType) {
+    case 'incoming':
+      logger.info('Handling incoming event', { ...logContext, eventData });
+      // Process incoming event here
+      call.answer = 'yes';
+      call.signaling = 'yes';
+      responseData = await xmsRequests.updateCallRequest(tenantId, '', resourceId, call);
       break;
-    case 'keypress':
-      // Handle keypress event
+    case 'stream':
+      logger.info('Handling stream event', logContext);
+      // Process stream event here
       break;
-    case 'scroll':
-      // Handle scroll event
+    case 'media_started':
+      logger.info('Handling media_started event', logContext);
+      // Process media_started event here
       break;
-    // Add more cases as needed
+    case 'answered':
+      logger.info('Handling answered event', { ...logContext, eventData });
+      // Process answered event here
+      responseData
+      break;
     default:
+      logger.warn('Unhandled event type', { ...logContext, eventType: event.type });
     // Handle unknown event type
   }
+
+  logger.info('Event response', { ...logContext, responseData });
 }
 
 module.exports = router;

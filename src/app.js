@@ -130,7 +130,7 @@ async function registerGateway() {
   const payload = {
     type: 'xms',
     // url: `https://${CXENGAGE_REGION}-${CXENGAGE_ENVIRONMENT}-xms-gateway.${CXENGAGE_DOMAIN}`,
-    url: 'https://fdd8-159-2-180-142.ngrok-free.app',
+    url: 'https://e4f9-159-2-180-142.ngrok-free.app ',
     actions: [
       {
         name: 'verify-credentials',
@@ -147,6 +147,10 @@ async function registerGateway() {
       {
         name: 'add-participant',
         target: '/tenants/:tenant-id/interactions/:interaction-id/actions/participant',
+      },
+      {
+        name: 'play-media',
+        target: '/tenants/:tenant-id/interactions/:interaction-id/actions/play-media',
       },
     ],
     subscriptions: [],

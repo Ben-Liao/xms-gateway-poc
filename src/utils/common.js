@@ -159,6 +159,16 @@ async function execShellCommand(command, args) {
   });
 }
 
+/**
+ * Extract SIP address from input string.
+ * @param {*} input, input string
+ * @returns  SIP address if found, else returns input string.
+ */
+function extractSipAddress(input) {
+  const match = input.match(/sip:[^;>]*@[^;>]*/);
+  return match ? match[0] : input;
+}
+
 module.exports = {
   sendHTTPError,
   sendHTTPSuccess,
@@ -166,4 +176,5 @@ module.exports = {
   extractParam,
   getIntegration,
   execShellCommand,
+  extractSipAddress,
 };

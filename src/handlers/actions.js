@@ -13,7 +13,7 @@ const {
 } = process.env;
 
 // const serverURL = `https://${CXENGAGE_REGION}-${CXENGAGE_ENVIRONMENT}-xms-gateway.${CXENGAGE_DOMAIN}`;
-const serverURL = 'https://fdd8-159-2-180-142.ngrok-free.app';
+const serverURL = 'https://e4f9-159-2-180-142.ngrok-free.app ';
 
 async function dial(req, res) {
   const { body, params } = req;
@@ -54,11 +54,11 @@ async function dial(req, res) {
     logger.info('metadata is empty', logContext);
 
     try {
-      const callBackUri = `${serverURL}/webhook/tenant/${tenantId}/webhook`;
-      logger.info('callBackUri', callBackUri);
-      // call the xmsserver to create a call back webhook.
-      const xmsEvent = await xmsRequests.createWebHookRequest(tenantId, interactionId, callBackUri);
-      logger.info('XMS event is created', { ...logContext, xmsEvent });
+      // const callBackUri = `${serverURL}/webhook/tenant/${tenantId}/webhook`;
+      // logger.info('callBackUri', callBackUri);
+      // // call the xmsserver to create a call back webhook.
+      // const xmsEvent = await xmsRequests.createWebHookRequest(tenantId, interactionId, callBackUri);
+      // logger.info('XMS event is created', { ...logContext, xmsEvent });
 
       // Create a conferences:
       const xmsConferenceParams = {
@@ -66,19 +66,27 @@ async function dial(req, res) {
         max_parties: 4,
       };
 
-      const conferenceResponse = await xmsRequests.createConferenceRequest({
-        tenantId, interactionId, xmsConferenceParams,
-      });
+      logger.info('Prepare for xms conference ', { ...logContext, xmsConferenceParams });
+      const confResponse = await xmsRequests.createConferenceRequest(
+        tenantId,
+        interactionId,
+        xmsConferenceParams,
+      );
 
-      const conference = conferenceResponse.body;
-      logger.info('XMS conference is created', { ...logContext, conference });
+      if (confResponse.status !== errors.STATUS_NO_ERROR) {
+        logger.error('Failed to create conference', { ...logContext, confResponse });
+        throw new Error('Failed to create XMS conference');
+      }
+      const conferenceResponse = confResponse.body.web_service.conference_response[0].$;
+      logger.info('XMS conference is created', { ...logContext, conferenceResponse });
 
       // Create a call
       const xmsCallParams = {
         tenantId,
         interactionId,
         source: 'sip:xmserver@107.20.26.214',
-        destination: parameters.to,
+        destination: `sip:+${parameters.to}@52.39.73.217`, 
+        // destination: parameters.to,
       };
 
       const xmsCallResponse = await xmsRequests.createCallRequest(xmsCallParams);
@@ -88,7 +96,7 @@ async function dial(req, res) {
       // build the metadata
       meta = {
         'xms-event': xmsEvent.body,
-        'xms-conference': conference,
+        'xms-conference': conferenceResponse,
         'xms-call-resource': [xmsCallResponse.body.call_response],
         participants: [{ [callId]: { source: parameters.to } }],
       };
@@ -190,24 +198,36 @@ async function dial(req, res) {
 }
 
 async function modifyCall(req, res) {
+  const { body, params } = req;
+  logger.debug('/play-media action is called, req.params', { params, body });
+
+  let { tenantId, interactionId } = req.params;
+  if (!tenantId || !uuidValidate(tenantId)) {
+    tenantId = req.body['tenant-id'];
+  }
+
+  if (!interactionId || !uuidValidate(interactionId)) {
+    interactionId = req.body['interaction-id'];
+  }
+
   const {
+    'action-name': actionName,
+    id,
+    'sub-id': subId,
+    parameters,
+    metadata,
+  } = body;
+
+  const actionId = id;
+
+  const logContext = {
     'tenant-id': tenantId,
     'interaction-id': interactionId,
-    'action-name': actionName,
-    id: actionId,
-    'sub-id': subId,
-  } = req.body;
-
-  const params = {
-    tenantId,
-    interactionId,
-    actionName,
-    actionId,
-    subId,
-    params: req.body,
+    'action-id': actionId,
+    params: body,
   };
 
-  logger.info(`/modifyCall: called to handle ${actionName}`, params);
+  logger.info(`Prepare to process ${actionName} action`, logContext);
   try {
     await cxRequests.sendActionResponse({
       tenantId, interactionId, actionId, subId,
@@ -221,8 +241,98 @@ async function modifyCall(req, res) {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+async function playMedia(req, res) {
+  const { body, params } = req;
+  logger.info('/play-media action is called, req.params', { params, body });
+
+  let { tenantId, interactionId } = req.params;
+  if (!tenantId || !uuidValidate(tenantId)) {
+    tenantId = req.body['tenant-id'];
+  }
+
+  if (!interactionId || !uuidValidate(interactionId)) {
+    interactionId = req.body['interaction-id'];
+  }
+
+  const {
+    'action-name': actionName,
+    id,
+    'sub-id': subId,
+    parameters,
+    metadata,
+  } = body;
+
+  const actionId = id;
+
+  const logContext = {
+    'tenant-id': tenantId,
+    'interaction-id': interactionId,
+    'action-id': actionId,
+    params: body,
+  };
+
+  logger.info(`Prepare to process ${actionName} action`, logContext);
+  const resourceId = metadata.events[0]['resource-id'];
+  let callAction = {};
+  const { media } = parameters;
+  const { type } = media;
+  switch (type) {
+    case 'audio':
+      callAction = {
+        play: {
+          $: {
+            delay: '0s',
+            max_time: 'infinite',
+            offset: '0s',
+            repeat: '0',
+            skip_interval: '10s',
+            terminate_digits: '#',
+          },
+          play_source: {
+            $: { location: media.source || 'file://xmstool/xmstool_play' },
+          },
+          dvr_setting: {
+            $: {
+              backward_key: '2',
+              forward_key: '1',
+              pause_key: '3',
+              restart_key: '5',
+              resume_key: '4',
+            },
+          },
+        },
+      };
+      break;
+    case 'tts':
+      callAction = {
+        play: {
+          type: 'tts',
+          text: parameters.media.text,
+        },
+      };
+      break;
+    default:
+      break;
+  }
+
+  try {
+    logger.debug('Wait for 3 second', { ...logContext, callAction });
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    logger.debug('Play media request after 3 second', { ...logContext, callAction });
+    const response = await xmsRequests.playMediaRequest(tenantId, interactionId, resourceId, callAction);
+    logger.info('XMS play media response', { ...logContext, response });
+
+    // Handle the HTTP POST "playMedia" request here
+    // Generate a successful response
+    res.status(200).json({ message: 'Play media request successful' });
+  } catch (error) {
+    // Handle any errors that occur during the request handling
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
 
 module.exports = {
   dial,
   modifyCall,
+  playMedia,
 };

@@ -115,12 +115,15 @@ async function postRequest(path, payload) {
       body: (Object.prototype.hasOwnProperty.call(data, 'result') ? data.result : data),
     };
   } catch (err) {
-    logger.error('getRequest:', err);
+    logger.error('Errorr to send post to cxEngage:', err);
+    if (err.response && err.response.data) {
+      logger.error('Error response data:', err.response.data);
+    }
     return {
       status: errors.HTTP_GET_REQ_TO_CX_FAILED,
       body: {
         message: 'failed, http get request',
-        error: err.response.data,
+        error: err.response ? err.response.data : {},
       },
     };
   }
@@ -242,6 +245,26 @@ async function getAction({
   }
 }
 
+async function createInteraction(tenantId, interactionParams) {
+  const path = `tenants/${tenantId}/interactions`;
+  logger.info('creating interaction', { tenantId, path, interactionParams });
+  let interaction;
+  try {
+    const { body } = await postRequest(path, interactionParams);
+    interaction = body;
+  } catch (error) {
+    logger.error('error while seding action response', error);
+    return {
+      status: errors.HTTP_POST_REQ_TO_CX_FAILED,
+      body: {
+        message: 'Faild to create interaction',
+        error: error.response.data,
+      },
+    };
+  }
+  return interaction;
+}
+
 async function updateInteractionMetadata({ tenantId, interactionId, metadata }) {
   // Get secret from AWS secret manager required to communicate with CxEngage
   const cxSecretName = secrets.getCxEngageSecretName();
@@ -309,6 +332,26 @@ async function getMetadata({ tenantId, interactionId }) {
   });
 }
 
+async function sendInterrupt({tenantId, interactionId,interactionParams}) {
+  const path = `tenants/${tenantId}/interactions`;
+  logger.info('creating interaction', { tenantId, path, interactionParams });
+  let interaction;
+  try {
+    const { body } = await postRequest(path, interactionParams);
+    interaction = body;
+  } catch (error) {
+    logger.error('error while seding action response', error);
+    return {
+      status: errors.HTTP_POST_REQ_TO_CX_FAILED,
+      body: {
+        message: 'Faild to create interaction',
+        error: error.response.data,
+      },
+    };
+  }
+  return interaction;
+}
+
 module.exports = {
   getRequest,
   postRequest,
@@ -316,4 +359,5 @@ module.exports = {
   getAction,
   updateInteractionMetadata,
   getMetadata,
+  createInteraction,
 };

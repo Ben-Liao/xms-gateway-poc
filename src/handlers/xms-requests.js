@@ -159,7 +159,7 @@ async function getEventHandlersRequest() {
   }
 }
 
-function createCallRequest(tenantId, interactionId, source, destination) {
+async function createCallRequest(tenantId, interactionId, source, destination) {
   const xmsurl = `${xmsUrl}/default/calls?appid=app`;
 
   const logContext = {
@@ -200,39 +200,37 @@ function createCallRequest(tenantId, interactionId, source, destination) {
 
   logger.debug('Calling xms call services', { ...logContext, xmsurl, xml });
 
-  const response = axios.post(xmsurl, xml, {
-    headers: {
-      'Content-Type': 'application/xml',
-      Authorization: `Basic ${token}`,
-    },
-  })
-    .then((res) => new Promise((resolve, reject) => {
+  try {
+    const res = await axios.post(xmsurl, xml, {
+      headers: {
+        'Content-Type': 'application/xml',
+        Authorization: `Basic ${token}`,
+      },
+    });
+    return new Promise((resolve, reject) => {
       xml2js.parseString(res.data, (err, result) => {
         if (err) {
+          logger.error('Failed to create xms called:', err);
           reject(err);
         } else {
-          logger.debug('createCallRequest, xms /call response:', JSON.stringify(JSON.parse(result)));
+          logger.debug('CreatecallRequest, xms /call response:', JSON.stringify(result));
           resolve({
             status: errors.STATUS_NO_ERROR,
-            body: JSON.parse(result),
+            body: result,
           });
         }
       });
-    }))
-    .catch((err) => {
-      // Handle error
-      logger.error('getRequest Errors:', err);
-      return {
-        status: errors.FAILED_SEND_REQUEST_TO_XMS,
-        body: {
-          message: 'Failed to call the XMS /call request.',
-          error: err,
-        },
-      };
     });
-
-  logger.debug('createCallRequest: response:', response);
-  return response;
+  } catch (err) {
+    logger.error('getRequest Errors:', err);
+    return {
+      status: errors.FAILED_SEND_REQUEST_TO_XMS,
+      body: {
+        message: 'Failed to call the XMS /call request.',
+        error: err,
+      },
+    };
+  }
 }
 
 // Update the call to the xms server.
@@ -292,7 +290,7 @@ async function updateCallRequest(tenantId, interactionId, callId, call) {
 }
 
 async function playMediaRequest(tenantId, interactionId, callId, callData) {
-  const path = `/default/calls/${callId}/media?appid=app`;
+  const path = `/default/calls/${callId}`;
 
   const logContext = {
     tenantId,
@@ -305,30 +303,7 @@ async function playMediaRequest(tenantId, interactionId, callId, callData) {
     web_service: {
       $: { version: '1.0' },
       call: {
-        call_action: {
-          play: {
-            $: {
-              delay: '0s',
-              max_time: 'infinite',
-              offset: '0s',
-              repeat: '0',
-              skip_interval: '10s',
-              terminate_digits: '#',
-            },
-            play_source: {
-              $: { location: 'file://xmstool/xmstool_play' },
-            },
-            dvr_setting: {
-              $: {
-                backward_key: '2',
-                forward_key: '1',
-                pause_key: '3',
-                restart_key: '5',
-                resume_key: '4',
-              },
-            },
-          },
-        },
+        call_action: callData,
       },
     },
   };
@@ -339,17 +314,18 @@ async function playMediaRequest(tenantId, interactionId, callId, callData) {
 
   try {
     const response = await updateXMSRequest(path, xml);
-    logger.debug('updateCallRequest, xms /call response:', { ...logContext, response });
+    logger.debug('updateCallRequest is called, xms response:', { ...logContext, response });
     return response.body;
   } catch (error) {
-    logger.error(`Failed to update xms call: ${error}`);
-    return {
-      status: errors.FAILED_SEND_REQUEST_TO_XMS,
-      body: {
-        message: 'Failed to update the XMS /call request.',
-        error,
-      },
-    };
+    logger.error('Failed to update xms call: ', error);
+    throw error;
+    // return {
+    //   status: errors.FAILED_SEND_REQUEST_TO_XMS,
+    //   body: {
+    //     message: 'Failed to update the XMS /call request.',
+    //     error,
+    //   },
+    // };
   }
 }
 
@@ -373,7 +349,8 @@ async function playMediaRequest(tenantId, interactionId, callId, callData) {
 //     reserve="2"
 //     type="audio"/>
 // </web_service>
-function createConferenceRequest(tenantId, interactionId, conferenceParams) {
+
+async function createConferenceRequest(tenantId, interactionId, conferenceParams) {
   const xmsurl = `${xmsUrl}/default/conferences?appid=app`;
 
   const logContext = {
@@ -413,39 +390,37 @@ function createConferenceRequest(tenantId, interactionId, conferenceParams) {
 
   logger.debug('Calling xms conference services', { ...logContext, xmsurl, xml });
 
-  const response = axios.post(xmsurl, xml, {
-    headers: {
-      'Content-Type': 'application/xml',
-      Authorization: `Basic ${token}`,
-    },
-  })
-    .then((res) => new Promise((resolve, reject) => {
+  try {
+    const res = await axios.post(xmsurl, xml, {
+      headers: {
+        'Content-Type': 'application/xml',
+        Authorization: `Basic ${token}`,
+      },
+    });
+
+    return new Promise((resolve, reject) => {
       xml2js.parseString(res.data, (err, result) => {
         if (err) {
           reject(err);
         } else {
-          logger.debug('createConferenceRequest, xms /conference response:', JSON.stringify(JSON.parse(result)));
+          logger.debug('CreateConferenceRequest, xms /conference response:', JSON.stringify(result));
           resolve({
             status: errors.STATUS_NO_ERROR,
-            body: JSON.parse(result),
+            body: result,
           });
         }
       });
-    }))
-    .catch((err) => {
-      // Handle error
-      logger.error('getRequest Errors:', err);
-      return {
-        status: errors.FAILED_SEND_REQUEST_TO_XMS,
-        body: {
-          message: 'Failed to call the XMS /conference request.',
-          error: err,
-        },
-      };
     });
-
-  logger.debug('createConferenceRequest: response:', response);
-  return response;
+  } catch (err) {
+    logger.error('getRequest Errors:', err);
+    return {
+      status: errors.FAILED_SEND_REQUEST_TO_XMS,
+      body: {
+        message: 'Failed to call the XMS /conference request.',
+        error: err,
+      },
+    };
+  }
 }
 
 // Update the conference to the xms server.

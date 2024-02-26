@@ -171,21 +171,11 @@ async function processIncomingEventPOC({
   const incomeCallResponse = await xmsRequests.updateCallRequest(tenantId, '', resourceId, call);
   logger.info('Incomming Call accepted', { ...logContext, incomeCallResponse });
 
-  // const conferenceResponse = confResponse.body.web_service.conference_response[0].$;
-  // logger.info('XMS conference is created', { ...logContext, conferenceResponse });
 
-  // Create another callresource:
-  const call2to = 'sip:+18156579266@52.39.73.217';
-  const call2from = 'sip:+15064715969@107.20.26.214';
-  const call2Respone = await xmsRequests.createCallRequest(tenantId, interactionId, call2from, call2to);
-  logger.info(`XMS call ${call2to} is created`, { ...logContext, call2Respone });
-  // if (call2Respone.status !== errors.STATUS_NO_ERROR) {
-  //   logger.error(`Failed to create a call to ${call2to}.`, { ...logContext, call2Respone });
-  //   throw new Error('Failed to create a call', call2Respone.body);
-  // }
-
-  // const call2ResourceId = call2Respone.call_response.identifier;
-
+  logger.debug ('Wait for 5 seconds');
+  // Wait for 5 seconds:
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  logger.debug ('5 seconds passed');
   // Create a conferences:
   const xmsConferenceParams = {
     type: 'audio',
@@ -203,6 +193,66 @@ async function processIncomingEventPOC({
     // throw new Error('Failed to create XMS conference');
   }
   logger.info('XMS conference is created', { ...logContext, confResponse });
+  const conferenceResourceId = confResponse.body.web_service.conference_response[0].$.identifier;
+  logger.debug(`Conference resource id: ${conferenceResourceId}`, { ...logContext });
+
+  // Wait for 5 seconds
+  await new Promise(resolve => setTimeout(resolve, 10000));
+  logger.info('5 seconds passed', { ...logContext });
+
+  // Create another callresource:
+  const call2to = 'sip:+18156579266@52.39.73.217';
+  const call2from = 'sip:+15064715969@107.20.26.214';
+  const call2Respone = await xmsRequests.createCallRequest(tenantId, interactionId, call2from, call2to);
+  logger.info(`XMS call ${call2to} is created`, { ...logContext, call2Respone });
+  if (call2Respone.status !== errors.STATUS_NO_ERROR) {
+    logger.error(`Failed to create a call to ${call2to}.`, { ...logContext, call2Respone });
+    // throw new Error('Failed to create a call', call2Respone.body);
+  }
+
+  const call2ResourceId = call2Respone.body.web_service.call_response[0].$.identifier;
+  logger.debug(`Call 2 resource id: ${call2ResourceId}`, { ...logContext });
+
+  // Add call to conference:
+  const addCall1ToConfResponse = await xmsRequests.addCallToConferenceRequest(
+    tenantId,
+    interactionId,
+    conferenceResourceId,
+    resourceId,
+  );
+  if (addCall1ToConfResponse.status !== errors.STATUS_NO_ERROR) {
+    logger.error('Failed to add call 1 to conference', { ...logContext, addCall1ToConfResponse });
+    // throw new Error('Failed to add call 1 to conference');
+  }
+  logger.info('Call 1 is added to conference', { ...logContext, addCall1ToConfResponse });
+
+  // Wait for 30 seconds
+  await new Promise(resolve => setTimeout(resolve, 30000));
+
+  const addCall2ToConfResponse = await xmsRequests.addCallToConferenceRequest(
+    tenantId,
+    interactionId,
+    conferenceResourceId,
+    call2ResourceId,
+  );
+  logger.info('Call 2 is added to conference', { ...logContext, addCall2ToConfResponse });
+}
+
+async function processHangupEvent({
+  tenantId, resourceId, eventType, resourceType, eventData, logContext,
+}) {
+  const { called_uri, caller_uri } = eventData;
+  const event = {
+    resourceId, eventType, resourceType, eventData,
+  };
+  // Hungup the call
+  const responseData = await xmsRequests.deleteCallRequest(tenantId, '', resourceId);
+  if (responseData.status !== errors.STATUS_NO_ERROR) {
+    logger.error('Failed to delete call', { ...logContext, responseData });
+    // throw new Error('Failed to delete call');
+  } else {
+    logger.info('Call deleted', { ...logContext, responseData});
+  }
 }
 
 async function handleEvent(tenantId, event) {
@@ -289,6 +339,18 @@ async function handleEvent(tenantId, event) {
       // };
       // responseData = await xmsRequests.playMediaRequest(tenantId, '', resourceId, call);
       // TODO do the interrupt update
+      break;
+    case 'hangup':
+      logger.info('Handling hangup event', { ...logContext, eventData });
+      // Process hangup event here
+      processHangupEvent({
+        tenantId,
+        resourceId,
+        eventType,
+        resourceType,
+        eventData,
+        logContext,
+      });
       break;
     default:
       logger.warn(`Unhandled event type ${eventType}:`, { ...logContext, eventType: event.type });

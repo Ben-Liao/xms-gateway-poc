@@ -185,7 +185,7 @@ async function createCallRequest(tenantId, interactionId, source, destination) {
           ice: 'no',
           info_ack_mode: 'automatic',
           media: 'audio',
-          signaling: 'no',
+          signaling: 'yes',
           source_uri: source,
           rx_delta: '+0dB',
           tx_delta: '+0dB',
@@ -198,7 +198,7 @@ async function createCallRequest(tenantId, interactionId, source, destination) {
   const builder = new xml2js.Builder();
   const xml = builder.buildObject(obj);
 
-  logger.debug('Calling xms call services', { ...logContext, xmsurl, xml });
+  logger.debug(`Calling xms call services to dail ${destination}}`, { ...logContext, xmsurl, xml });
 
   try {
     const res = await axios.post(xmsurl, xml, {
@@ -289,6 +289,47 @@ async function updateCallRequest(tenantId, interactionId, callId, call) {
   }
 }
 
+/**
+ * Delete the call from the xms server.
+ */
+async function deleteCallRequest(tenantId, interactionId, callId) {
+  const path = `/default/calls/${callId}`;
+  const xmsurl = `${xmsUrl}${path}?appid=app`;
+
+  const logContext = {
+    tenantId,
+    interactionId,
+    callId,
+  };
+
+  logger.debug('Calling xms  services to delete the call', { ...logContext, xmsurl });
+
+  try {
+    const response = await axios.delete(xmsurl, {
+      headers: {
+        Authorization: `Basic ${token}`,
+      },
+    });
+    logger.debug('deleteCallRequest, xms /call response:', { ...logContext, response });
+    return {
+      status: errors.STATUS_NO_ERROR,
+      body: response.data,
+    };
+  } catch (error) {
+    logger.error('Failed to delete xms call:', error);
+    return {
+      status: errors.FAILED_SEND_REQUEST_TO_XMS,
+      body: {
+        message: 'Failed to delete the XMS /call request.',
+        error,
+      },
+    };
+  }
+}
+
+/**
+ * Play media to the call
+ */
 async function playMediaRequest(tenantId, interactionId, callId, callData) {
   const path = `/default/calls/${callId}`;
 
@@ -440,7 +481,7 @@ async function createConferenceRequest(tenantId, interactionId, conferenceParams
 //         </call_action>
 //     </call>
 // </web_service>
-function updateConferenceRequest(tenantId, interactionId, conferenceId, updateParams) {
+async function updateConferenceRequest(tenantId, interactionId, conferenceId, updateParams) {
   const xmsurl = `${xmsUrl}/default/conferences?appid=app`;
 
   const logContext = {
@@ -513,6 +554,77 @@ function updateConferenceRequest(tenantId, interactionId, conferenceId, updatePa
   return response;
 }
 
+async function addCallToConferenceRequest(tenantId, interactionId, conferenceId, callId) {
+  const xmsurl = `${xmsUrl}/default/calls/${callId}?appid=app`;
+
+  const logContext = {
+    tenantId,
+    interactionId,
+    conferenceId,
+    callId,
+  };
+
+  const obj = {
+    web_service: {
+      $: {
+        version: '1.0',
+      },
+      call: {
+        call_action: {
+          add_party: {
+            $: {
+              audio: 'sendrecv',
+              auto_gain_control: 'yes',
+              clamp_dtmf: 'no',
+              conf_id: conferenceId,
+              echo_cancellation: 'yes',
+              region: '0',
+              video: 'inactive',
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const builder = new xml2js.Builder();
+  const xml = builder.buildObject(obj);
+
+  logger.debug('Calling xms conference services', { ...logContext, xmsurl, xml });
+
+  try {
+    const res = await axios.put(xmsurl, xml, {
+      headers: {
+        'Content-Type': 'application/xml',
+        Authorization: `Basic ${token}`,
+      },
+    });
+
+    return new Promise((resolve, reject) => {
+      xml2js.parseString(res.data, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          logger.debug('addCallToConferenceRequest, xms /conference response:', JSON.stringify(result));
+          resolve({
+            status: errors.STATUS_NO_ERROR,
+            body: result,
+          });
+        }
+      });
+    });
+  } catch (err) {
+    logger.error('addCallToConferenceRequest() get error in the request, Errors:', err);
+    return {
+      status: errors.FAILED_SEND_REQUEST_TO_XMS,
+      body: {
+        message: 'Failed to call the XMS /conference request.',
+        error: err,
+      },
+    };
+  }
+}
+
 module.exports = {
   getEventHandlersRequest,
   createWebHookRequest,
@@ -521,4 +633,6 @@ module.exports = {
   updateConferenceRequest,
   updateCallRequest,
   playMediaRequest,
+  deleteCallRequest,
+  addCallToConferenceRequest,
 };

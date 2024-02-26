@@ -1,5 +1,8 @@
 const xml2js = require('xml2js');
+const uuid = require('uuid');
 const xmsRequests = require('../handlers/xms-requests');
+const logger = require('./logger');
+const errors = require('./errors');
 
 function parseXml(xml) {
   return xml2js.parseStringPromise(xml, { explicitArray: false })
@@ -110,12 +113,49 @@ const xmlData = `<web_service version="1.0">
     </event>
 </web_service>`;
 
-parseXml(xmlData)
-  .then((parsedData) => console.log(JSON.stringify(parsedData, null, 2)))
-  .catch((err) => console.error(err));
+// parseXml(xmlData)
+//   .then((parsedData) => console.log(JSON.stringify(parsedData, null, 2)))
+//   .catch((err) => console.error(err));
 
-const responData = xmsRequests.getEventHandlersRequest();
-console.log('Get the eventhandlers: ', responData);
+// const responData = xmsRequests.getEventHandlersRequest();
 
+// Create a conferences:
+const xmsConferenceParams = {
+  type: 'audio',
+  max_parties: 4,
+};
+
+logger.info('Prepare for xms conference ', { xmsConferenceParams });
+async function createConference() {
+  const confResponse = await xmsRequests.createConferenceRequest(
+    uuid.v4(),
+    uuid.v4(),
+    xmsConferenceParams,
+  );
+  return confResponse;
+}
+
+async function createCallAndConference() {
+  const call2to = 'sip:+18156579266@52.39.73.217';
+  const call2from = 'sip:+15064715969@107.20.26.214';
+  const call2Respone = await xmsRequests.createCallRequest(uuid.v1(), uuid.v1(), call2from, call2to);
+  logger.info(`XMS call ${call2to} is created`, { call2Respone });
+
+  // createConference()
+  //   .then((confResponse) => {
+  //     logger.info('XMS conference is created', { confResponse });
+  //   })
+  //   .catch((error) => {
+  //     logger.error('Failed to create conference', { error });
+  //     // throw new Error('Failed to create XMS conference');
+  //   });
+}
+
+createCallAndConference();
+
+// const call2ResourceId = await createCallAndConference().then((response) => {
+//   return response.body.web_service.call_response[0].$.identifier;
+// });
+// logger.debug(`Call 2 resource id: ${call2ResourceId}`);
 
 module.exports = parseXml;

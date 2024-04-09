@@ -625,6 +625,104 @@ async function addCallToConferenceRequest(tenantId, interactionId, conferenceId,
   }
 }
 
+/** Multi Recording in a conference. It sends the following XML to xms server via the http put.
+ * <web_service version="1.0">
+    <conference>
+        <conf_action>
+<multi_record terminate_digits="#" max_time="1000s"
+            recording_audio_uri="file://verification/beta_recorded_file.wav"
+            recording_audio_type="audio/x-wav" >
+<record_track track_id="0" id="conn:01234567-abcd-8901-dcba-1234567890ab" media="audio" direction="recv" />
+<record_track track_id="1" id="conn:76543210-dcba-1098-abcd-ba0987654321" media="audio" direction="recv" />
+</multi_record>
+</conf_action>
+    </conference>
+</web_service>
+ */
+async function multiRecordingConferenceRequest(tenantId, interactionId, conferenceId, recordingParams) {
+  const xmsurl = `${xmsUrl}/default/conferences/${conferenceId}?appid=app`;
+
+  const logContext = {
+    tenantId,
+    interactionId,
+    conferenceId,
+    recordingParams,
+  };
+
+  let recordTracks = recordingParams.recordTracks.reduce((acc, param) => {
+    acc.record_track = acc.record_track || [];
+    acc.record_track.push({
+      $: {
+        track_id: param.track_id,
+        id: param.id,
+        media: param.media,
+        direction: param.direction,
+      },
+    });
+    return acc;
+  }, {});
+
+  const obj = {
+    web_service: {
+      $: {
+        version: '1.0',
+      },
+      conference: {
+        conf_action: {
+          multi_record: {
+            $: {
+              terminate_digits: recordingParams.terminate_digits || '#',
+              max_time: recordingParams.max_time || '1000s',
+              recording_audio_uri: recordingParams.recording_audio_uri,
+              recording_audio_type: recordingParams.recording_audio_type,
+            },
+            ...recordTracks,
+          },
+        },
+      },
+    },
+  };
+
+  logger.debug('multiRecordingRequest, obj:', JSON.stringify(obj));
+
+  const builder = new xml2js.Builder();
+  const xml = builder.buildObject(obj);
+
+  logger.debug('Calling xms conference services', { ...logContext, xmsurl, xml });
+
+  try {
+    const res = await axios.put(xmsurl, xml, {
+      headers: {
+        'Content-Type': 'application/xml',
+        Authorization: `Basic ${token}`,
+      },
+    });
+
+    return new Promise((resolve, reject) => {
+      xml2js.parseString(res.data, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          logger.debug('multiRecordingRequest, xms /conference response:', JSON.stringify(result));
+          resolve({
+            status: errors.STATUS_NO_ERROR,
+            body: result,
+          });
+        }
+      });
+    });
+  } catch (err) {
+    logger.error('multiRecordingRequest() get error in the request, Errors:', err);
+    return {
+      status: errors.FAILED_SEND_REQUEST_TO_XMS,
+      body: {
+        message: 'Failed to call the XMS /conference request.',
+        error: err,
+      },
+    };
+  }
+}
+
 module.exports = {
   getEventHandlersRequest,
   createWebHookRequest,
@@ -635,4 +733,5 @@ module.exports = {
   playMediaRequest,
   deleteCallRequest,
   addCallToConferenceRequest,
+  multiRecordingConferenceRequest,
 };

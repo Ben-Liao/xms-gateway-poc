@@ -5,6 +5,7 @@ const common = require('../utils/common');
 const cxRequests = require('./cxengage-requests');
 const errors = require('../utils/errors');
 const xmsRequests = require('./xms-requests');
+const DynamoDBAccess = require('../db/dynamo-access');
 
 const {
   CXENGAGE_REGION,
@@ -13,7 +14,7 @@ const {
 } = process.env;
 
 // const serverURL = `https://${CXENGAGE_REGION}-${CXENGAGE_ENVIRONMENT}-xms-gateway.${CXENGAGE_DOMAIN}`;
-const serverURL = 'https://e4f9-159-2-180-142.ngrok-free.app ';
+const serverURL = 'https://8c5d-159-2-180-142.ngrok-free.app ';
 
 async function dial(req, res) {
   const { body, params } = req;
@@ -46,7 +47,7 @@ async function dial(req, res) {
   };
 
   logger.info('action-id:', actionId);
-  logger.info('/dial: called', logContext);
+  logger.info('/dial acition is called', logContext);
 
   let meta = {};
 
@@ -59,6 +60,21 @@ async function dial(req, res) {
       // // call the xmsserver to create a call back webhook.
       // const xmsEvent = await xmsRequests.createWebHookRequest(tenantId, interactionId, callBackUri);
       // logger.info('XMS event is created', { ...logContext, xmsEvent });
+
+      // Create a call
+      const source = 'sip:xmserver@107.20.26.214';
+      const destination = `sip:+${parameters.to}@52.39.73.217`;
+
+      const xmsCallResponse = await xmsRequests.createCallRequest(
+        tenantId,
+        interactionId,
+        source,
+        destination,
+      );
+      logger.info('XMS call is created', { ...logContext, xmsCallResponse });
+      const callId = xmsCallResponse.body.call_response.identifier;
+
+      DynamoDBAccess.saveCallResource(tenantId, interactionId, callId, {});
 
       // Create a conferences:
       const xmsConferenceParams = {
@@ -80,18 +96,14 @@ async function dial(req, res) {
       const conferenceResponse = confResponse.body.web_service.conference_response[0].$;
       logger.info('XMS conference is created', { ...logContext, conferenceResponse });
 
-      // Create a call
-      const xmsCallParams = {
+      const conferenceId = conferenceResponse.identifier;
+
+      DynamoDBAccess.addConferenceAndAssociateCalls(
         tenantId,
         interactionId,
-        source: 'sip:xmserver@107.20.26.214',
-        destination: `sip:+${parameters.to}@52.39.73.217`, 
-        // destination: parameters.to,
-      };
-
-      const xmsCallResponse = await xmsRequests.createCallRequest(xmsCallParams);
-      logger.info('XMS call is created', { ...logContext, xmsCallResponse });
-      const callId = xmsCallResponse.body.call_response.identifier;
+        conferenceId,
+        { CallResourceID: callId },
+      );
 
       // build the metadata
       meta = {

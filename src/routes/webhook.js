@@ -164,6 +164,7 @@ async function processIncomingEventPOC({
   const event = {
     resourceId, eventType, resourceType, eventData,
   };
+
   // Accept the call
   const call = {};
   call.answer = 'yes';
@@ -235,7 +236,42 @@ async function processIncomingEventPOC({
     conferenceResourceId,
     call2ResourceId,
   );
+  if (addCall2ToConfResponse.status !== errors.STATUS_NO_ERROR) {
+    logger.error('Failed to add call 2 to conference', { ...logContext, addCall2ToConfResponse });
+    // throw new Error('Failed to add call 2 to conference');
+  }
   logger.info('Call 2 is added to conference', { ...logContext, addCall2ToConfResponse });
+
+  // Start recording:
+  const recordingParams = {
+    terminate_digits: '#',
+    max_time: 'infinite',
+    recording_audio_uri: `file://${tenantId}/recording-${interactionId}.wav`,
+    recording_audio_type: 'audio/x-wav',
+    recordTracks: [
+      {
+        track_id: '0',
+        id: `conn:${resourceId}`,
+        media: 'audio',
+        direction: 'recv',
+      },
+      {
+        track_id: '1',
+        id: `conn:${call2ResourceId}`,
+        media: 'audio',
+        direction: 'recv',
+      },
+    ],
+  };
+
+  logger.info('Start recording', { ...logContext, recordingParams });
+  const recordResponse = await xmsRequests.multiRecordingConferenceRequest(
+    tenantId,
+    interactionId,
+    conferenceResourceId,
+    recordingParams,
+  );
+  logger.info('Recording started', { ...logContext, recordResponse });
 }
 
 async function processHangupEvent({

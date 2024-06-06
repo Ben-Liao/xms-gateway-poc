@@ -18,7 +18,6 @@ router.post('/tenants/:tenantId/interactions/:interactionId/actions/verify-crede
 
 router.post('/tenants/:tenantId/interactions/:interactionId/actions/dial', actions.dial);
 router.post('/tenants/:tenantId/interactions/:interactionId/actions/play-media', actions.playMedia);
-
 router.post('/tenants/:tenantId/interactions/:interactionId/actions/:actionName', actions.modifyCall);
 
 module.exports = router;

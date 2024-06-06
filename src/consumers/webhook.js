@@ -324,6 +324,12 @@ async function handleEvent(tenantId, event) {
       //   eventData,
       //   logContext,
       // });
+
+      // Process incoming event here
+      // call.answer = 'yes';
+      // call.signaling = 'yes';
+      // responseData = await xmsRequests.updateCallRequest(tenantId, '', resourceId, call);
+
       processIncomingEventPOC({
         tenantId,
         resourceId,
@@ -332,10 +338,7 @@ async function handleEvent(tenantId, event) {
         eventData,
         logContext,
       });
-      // Process incoming event here
-      // call.answer = 'yes';
-      // call.signaling = 'yes';
-      // responseData = await xmsRequests.updateCallRequest(tenantId, '', resourceId, call);
+
       break;
     case 'stream':
       logger.info('Handling stream event', logContext);

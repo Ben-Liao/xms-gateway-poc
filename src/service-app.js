@@ -1,6 +1,6 @@
 const express = require('express');
 
-const statusRouter = require('./routes/status');
+const statusRouter = require('./consumers/status');
 
 // If post is not configured we default to 8080
 const SERVICE_PORT = process.env.SERVICE_PORT || 8080;

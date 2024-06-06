@@ -1,0 +1,79 @@
+AGENT					CUSTOMER				SANSAY SBC					XMS MRB					XMS Server					XMS GATEWAY						FLOW MANAGER
+							|------ PSTN CALL ----->|
+													|-------- SIP INVITE ------>|
+																				|------- SIP INVITE --->|
+																				|<------ SIP OK --------|
+																				|------------- CREATE INTERACTION WEBHOOK --------->|
+																																	|--------- CREATE INTERACTION ----->|
+																																	|<-------- INTERACTION CREATED -----|
+																				|<------------------ CREATE CONFERENCE -------------|
+																				|---CREATE CONFERENCE-->|
+																				|<--CONFERENCE CREATED--|
+																				|------------------CONFERENCE CREATED ------------->|
+																																	|--------- CONFERENCE CREATED ----->|
+																																	|<-------- ADD PARTICIPANT ---------|
+																				|<----------------- JOIN CUSTOMER ------------------|
+																				|---- JOIN CUSTOMER --->|
+																				|<-- CUSTOMER JOINED ---|
+																				|------------------ CUSTOMER JOINED --------------->|
+																																	|------- PARTICIPANT ADDED -------->|
+																																	|<------------ PLAY MEDIA ----------|
+																				|<----------------- PLAY MEDIA ---------------------|								
+																				|----- PLAY MEDIA ----->|
+																				|<---- PLAY MEDIA ------|
+													|<-------- PLAY MEDIA ------|
+							|<----- PLAY MEDIA -----|
+																																	|<----------- COLLECT DTMF ---------|
+																				|<---------------- COLLECT DTMF --------------------|								
+																				|---- COLLECT DTMF ---->|
+																				|<---- COLLECT DTMF ----|
+													|<------- COLLECT DTMF -----|
+							|<---- COLLECT DTMF ----|
+							|------ PASS DTMF ----->|
+													|--------  PASS DTMF ------>|													
+																				|----- PASS DTMF ------>|
+																				|<---- PASS DTMF -------|
+																				|----------------- PASS DTMF ---------------------->|
+																																	|----------- PASS DTMF ------------>|
+																																	|<--------- WORK OFFERED -----------|
+																				|<-------------- SIP DIAL AGENT --------------------|
+																				|------- SIP DIAL ----->|
+																				|<------- SIP DIAL -----|																	
+													|<---- SIP DIAL AGENT ------|
+|<------------------------- WEBRTC DIAL AGENT ------|
+|-------------------------- ACCEPT CALL ----------->|
+													|----------- SIP OK ------->|
+																				|------- SIP OK ------->|
+																				|<------- SIP OK -------|
+																				|----------------- WORK ACCEPTED ------------------>|
+																																	|---------- WORK ACCCEPTED -------->|
+																																	|<-------- ADD PARTICIPANT ---------|
+																				|<------------------ JOIN AGENT --------------------|
+																				|------ JOIN AGENT ---->|
+																				|<--- AGENT JOINED -----|
+																				|-------------------- AGENT JOINED ---------------->|
+																																	|------- PARTICIPANT ADDED -------->|
+							|------ DISCONNECT ---->|
+													|-------- DISCONNECT ------>|
+																				|------- DISCONNECT --->|
+																				|<------ DISCONNECT ----|
+																				|--------------- CUSTOMER DISCONNECTED ------------>|
+																																	|------ CUSTOMER DISCONNECTED ----->|
+																																	|<-------- REMOVE PARTICIPANT ------|
+																				|<-------------- DISCONNECT AGENT ------------------|
+																				|-- DISCONNECT AGENT -->|
+																				|<-- DISCONNECT AGENT --|																	
+													|<---- DISCONNECT AGENT ----|
+|<------------------------- DISCONNECT AGENT -------|
+|-------------------------- AGENT DISCONNECTED ---->|
+													|----------- SIP OK ------->|
+																				|------- SIP OK ------->|
+																				|<------- SIP OK -------|
+																				|----------------- WORK ENDED ------------------>|
+																																	|----- PARTICIPANT REMOVED -------->|																											
+																																	|<-------- INTERACTION ENDED -------|
+																				|<----------------- DESTROY CONFERENCE -------------|
+																				|- DESTROY CONFERENCE ->|
+																				|<-CONFERENCE DESTROYED-|
+																				|------------------CONFERENCE DESTROYED ----------->|
+																																	|--------- INTERACTION ENDED ------>|

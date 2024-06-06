@@ -21,7 +21,53 @@
 [2024-02-06T14:47:41.270Z] debug: Eureka: Heartbeat 
 [2024-02-06T14:47:41.275Z] debug: Eureka: RegistryUpdated 
 [2024-02-06T14:47:52.313Z] info: XML Data: {"tenantId":"5632772e-b379-4d73-b84d-633e4c64097e","xmlData":"<web_service version=\"1.0\">\r\n<event type=\"alarm\" resource_id=\"508e8def-cc3d-43e3-b6af-a4872ec9d1fb\" resource_type=\"call\">\r\n<event_data name=\"alarm\" value=\"rtcp-timeout-audio\" />\r\n<event_data name=\"call_id\" value=\"508e8def-cc3d-43e3-b6af-a4872ec9d1fb\" />\r\n<event_data name=\"gusid\" value=\"5b83899699bb45f0b7b078f729a3af3c\" />\r\n<event_data name=\"state\" value=\"on\" />\r\n<event_data name=\"type\" value=\"ALARM\" />\r\n</event>\r\n</web_service>"}
-[2024-02-06T14:47:52.314Z] info: Parsed XML: {"tenantId":"5632772e-b379-4d73-b84d-633e4c64097e","parsedXml":{"web_service":{"$":{"version":"1.0"},"event":{"$":{"type":"alarm","resource_id":"508e8def-cc3d-43e3-b6af-a4872ec9d1fb","resource_type":"call"},"event_data":[{"$":{"name":"alarm","value":"rtcp-timeout-audio"}},{"$":{"name":"call_id","value":"508e8def-cc3d-43e3-b6af-a4872ec9d1fb"}},{"$":{"name":"gusid","value":"5b83899699bb45f0b7b078f729a3af3c"}},{"$":{"name":"state","value":"on"}},{"$":{"name":"type","value":"ALARM"}}]}}}}
+[2024-02-06T14:47:52.314Z] info: Parsed XML: {"tenantId":"5632772e-b379-4d73-b84d-633e4c64097e","parsedXml":{
+        "web_service": {
+            "$": {
+                "version": "1.0"
+            },
+            "event": {
+                "$": {
+                    "type": "alarm",
+                    "resource_id": "508e8def-cc3d-43e3-b6af-a4872ec9d1fb",
+                    "resource_type": "call"
+                },
+                "event_data": [
+                    {
+                        "$": {
+                            "name": "alarm",
+                            "value": "rtcp-timeout-audio"
+                        }
+                    },
+                    {
+                        "$": {
+                            "name": "call_id",
+                            "value": "508e8def-cc3d-43e3-b6af-a4872ec9d1fb"
+                        }
+                    },
+                    {
+                        "$": {
+                            "name": "gusid",
+                            "value": "5b83899699bb45f0b7b078f729a3af3c"
+                        }
+                    },
+                    {
+                        "$": {
+                            "name": "state",
+                            "value": "on"
+                        }
+                    },
+                    {
+                        "$": {
+                            "name": "type",
+                            "value": "ALARM"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
 [2024-02-06T14:47:52.314Z] info: Handling event {"tenantId":"5632772e-b379-4d73-b84d-633e4c64097e","eventType":"alarm","resourceId":"508e8def-cc3d-43e3-b6af-a4872ec9d1fb","resourceType":"call","event":{"$":{"type":"alarm","resource_id":"508e8def-cc3d-43e3-b6af-a4872ec9d1fb","resource_type":"call"},"event_data":[{"$":{"name":"alarm","value":"rtcp-timeout-audio"}},{"$":{"name":"call_id","value":"508e8def-cc3d-43e3-b6af-a4872ec9d1fb"}},{"$":{"name":"gusid","value":"5b83899699bb45f0b7b078f729a3af3c"}},{"$":{"name":"state","value":"on"}},{"$":{"name":"type","value":"ALARM"}}]}}
 [2024-02-06T14:47:52.314Z] warn: Unhandled event type {"tenantId":"5632772e-b379-4d73-b84d-633e4c64097e","resourceId":"508e8def-cc3d-43e3-b6af-a4872ec9d1fb","resourceType":"call"}
 [2024-02-06T14:47:52.314Z] info: Event response {"tenantId":"5632772e-b379-4d73-b84d-633e4c64097e","eventType":"alarm","resourceId":"508e8def-cc3d-43e3-b6af-a4872ec9d1fb","resourceType":"call","responseData":{}}
@@ -617,3 +663,6 @@
 
 [2024-02-20T21:41:50.502Z] error: getRequest Errors: Request failed with status code 410 {"message":"Request failed with status code 410","name":"AxiosError","stack":"AxiosError: Request failed with status code 410\n    at settle (/Users/bliao/develop/projects/serenova/xms-gateway-poc/node_modules/axios/dist/node/axios.cjs:1970:12)\n    at IncomingMessage.handleStreamEnd (/Users/bliao/develop/projects/serenova/xms-gateway-poc/node_modules/axios/dist/node/axios.cjs:3069:11)\n    at IncomingMessage.emit (node:events:525:35)\n    at IncomingMessage.emit (node:domain:489:12)\n    at endReadableNT (node:internal/streams/readable:1358:12)\n    at processTicksAndRejections (node:internal/process/task_queues:83:21)","config":{"transitional":{"silentJSONParsing":true,"forcedJSONParsing":true,"clarifyTimeoutError":false},"adapter":["xhr","http"],"transformRequest":[null],"transformResponse":[null],"timeout":0,"xsrfCookieName":"XSRF-TOKEN","xsrfHeaderName":"X-XSRF-TOKEN","maxContentLength":-1,"maxBodyLength":-1,"env":{"Blob":null},"headers":{"Accept":"application/json, text/plain, */*","Content-Type":"application/xml","Authorization":"Basic QVBJVGVzdDpBcGlUZXN0MTIzIUAj","User-Agent":"axios/1.6.5","Content-Length":"373","Accept-Encoding":"gzip, compress, deflate, br"},"method":"post","url":"http://107.20.26.214:81/default/conferences?appid=app","data":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<web_service version=\"1.0\">\n  <conference active_talker_interval=\"0ms\" active_talker_region=\"1\" auto_gain_control=\"yes\" beep=\"yes\" caption=\"yes\" caption_duration=\"infinite\" clamp_dtmf=\"no\" echo_cancellation=\"yes\" layout=\"0\" layout_size=\"vga\" max_parties=\"4\" mixing_mode=\"mcu\" reserve=\"2\" type=\"audio\"/>\n</web_service>"},"code":"ERR_BAD_REQUEST","status":410}
 [2024-02-20T21:41:50.502Z] error: Failed to create conference {"tenantId":"5632772e-b379-4d73-b84d-633e4c64097e","eventType":"incoming","resourceId":"18c6b252-e2ab-4e86-8ed2-3804dad8872c","resourceType":"call","confResponse":{"status":1006,"body":{"message":"Failed to call the XMS /conference request.","error":{"message":"Request failed with status code 410","name":"AxiosError","stack":"AxiosError: Request failed with status code 410\n    at settle (/Users/bliao/develop/projects/serenova/xms-gateway-poc/node_modules/axios/dist/node/axios.cjs:1970:12)\n    at IncomingMessage.handleStreamEnd (/Users/bliao/develop/projects/serenova/xms-gateway-poc/node_modules/axios/dist/node/axios.cjs:3069:11)\n    at IncomingMessage.emit (node:events:525:35)\n    at IncomingMessage.emit (node:domain:489:12)\n    at endReadableNT (node:internal/streams/readable:1358:12)\n    at processTicksAndRejections (node:internal/process/task_queues:83:21)","config":{"transitional":{"silentJSONParsing":true,"forcedJSONParsing":true,"clarifyTimeoutError":false},"adapter":["xhr","http"],"transformRequest":[null],"transformResponse":[null],"timeout":0,"xsrfCookieName":"XSRF-TOKEN","xsrfHeaderName":"X-XSRF-TOKEN","maxContentLength":-1,"maxBodyLength":-1,"env":{"Blob":null},"headers":{"Accept":"application/json, text/plain, */*","Content-Type":"application/xml","Authorization":"Basic QVBJVGVzdDpBcGlUZXN0MTIzIUAj","User-Agent":"axios/1.6.5","Content-Length":"373","Accept-Encoding":"gzip, compress, deflate, br"},"method":"post","url":"http://107.20.26.214:81/default/conferences?appid=app","data":"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<web_service version=\"1.0\">\n  <conference active_talker_interval=\"0ms\" active_talker_region=\"1\" auto_gain_control=\"yes\" beep=\"yes\" caption=\"yes\" caption_duration=\"infinite\" clamp_dtmf=\"no\" echo_cancellation=\"yes\" layout=\"0\" layout_size=\"vga\" max_parties=\"4\" mixing_mode=\"mcu\" reserve=\"2\" type=\"audio\"/>\n</web_service>"},"code":"ERR_BAD_REQUEST","status":410}}}}
+
+
+

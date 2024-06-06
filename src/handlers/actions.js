@@ -14,7 +14,7 @@ const {
 } = process.env;
 
 // const serverURL = `https://${CXENGAGE_REGION}-${CXENGAGE_ENVIRONMENT}-xms-gateway.${CXENGAGE_DOMAIN}`;
-const serverURL = 'https://8c5d-159-2-180-142.ngrok-free.app ';
+const serverURL = 'https://4482-159-2-215-93.ngrok-free.appngrok-free.app';
 
 async function dial(req, res) {
   const { body, params } = req;

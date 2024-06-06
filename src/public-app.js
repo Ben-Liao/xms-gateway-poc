@@ -2,12 +2,12 @@ const cors = require('cors');
 const express = require('express');
 
 // Routes
-const initPsrFlowRouter = require('./routes/init-psr-flow');
-const sfEnabledTenantsRouter = require('./routes/sf-enabled-tenants');
-const sfUpdateVoiceCallRecRouter = require('./routes/update-voice-call-record');
-const gatewaysRouter = require('./routes/gateways');
-const statusRouter = require('./routes/status');
-const webhookRouter = require('./routes/webhook');
+const initPsrFlowRouter = require('./consumers/init-psr-flow');
+const sfEnabledTenantsRouter = require('./consumers/sf-enabled-tenants');
+const sfUpdateVoiceCallRecRouter = require('./consumers/update-voice-call-record');
+const gatewaysRouter = require('./consumers/gateways');
+const statusRouter = require('./consumers/status');
+const webhookRouter = require('./consumers/webhook');
 
 // If post is not configured we default to 9080
 const PUBLIC_PORT = process.env.PUBLIC_PORT || 9080;
